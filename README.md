@@ -12,11 +12,22 @@ Two Claude skills + a guided installer for the Moodle MCP server. Built for NCSU
 
 ## Install
 
-In **Claude Code** (find it in the Claude Desktop sidebar):
+> **Where to run these:** plugin installation only works in **Claude Code** — either the `claude` CLI in a terminal, or the Claude Code side of Claude Desktop (find it in the sidebar). It does **not** work in Cowork or Chat (see [Compatibility](#compatibility) below).
+
+**Option A — slash command** (inside an interactive Claude Code session):
 
 ```
 /plugin install github:leshamblin/moodle-teaching-tools
 ```
+
+**Option B — two-step marketplace install** (works in the CLI, including non-interactively):
+
+```
+claude plugin marketplace add leshamblin/moodle-teaching-tools
+claude plugin install moodle-teaching-tools@moodle-teaching-tools
+```
+
+If you installed from an already-running session, run `/reload-plugins` (or restart Claude Code) to activate it.
 
 Then run the prerequisite installer (one time per machine):
 
