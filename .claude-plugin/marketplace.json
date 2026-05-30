@@ -1,0 +1,14 @@
+{
+  "name": "moodle-teaching-tools",
+  "description": "Moodle teaching tools for NCSU faculty: at-risk-student dashboards and resource-link audits, plus a guided Moodle MCP installer.",
+  "owner": {
+    "name": "Les Shamblin"
+  },
+  "plugins": [
+    {
+      "name": "moodle-teaching-tools",
+      "source": "./",
+      "description": "Two Claude skills + a guided installer for the Moodle MCP server. Generate at-risk-student dashboards and verify resource links in any NCSU Moodle course."
+    }
+  ]
+}
