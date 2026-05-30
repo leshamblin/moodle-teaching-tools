@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Student Engagement Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --surface: #ffffff;
+    --border: #e5e7eb;
+    --border-strong: #d1d5db;
+    --text: #111827;
+    --text-muted: #4b5563;
+    --text-subtle: #9ca3af;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --red-border: #fecaca;
+    --yellow: #f59e0b;
+    --yellow-bg: #fffbeb;
+    --yellow-border: #fde68a;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --green-border: #bbf7d0;
+    --gray: #6b7280;
+    --gray-bg: #f3f4f6;
+    --accent: #4f46e5;
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.04), 0 1px 3px rgba(15,23,42,0.06);
+    --shadow-md: 0 4px 6px -1px rgba(15,23,42,0.05), 0 2px 4px -2px rgba(15,23,42,0.04);
+    --radius-sm: 6px;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 32px 28px 64px; }
+
+  /* ---------- Header ---------- */
+  header { margin-bottom: 24px; }
+  h1 { font-size: 22px; margin: 0 0 4px; font-weight: 600; letter-spacing: -0.01em; }
+  .sub { color: var(--text-muted); font-size: 13px; }
+  .sub .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: var(--gray-bg); color: var(--text-muted); font-size: 12px;
+    margin-left: 6px;
+  }
+
+  /* ---------- Action callout ---------- */
+  .callout {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 4px solid var(--red);
+    border-radius: var(--radius);
+    padding: 16px 20px; margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .callout.empty { border-left-color: var(--green); }
+  .callout-title {
+    font-size: 12px; font-weight: 600; color: var(--red);
+    text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .callout.empty .callout-title { color: var(--green); }
+  .callout-body { font-size: 14px; color: var(--text); }
+  .chip-mailto {
+    display: inline-block; padding: 4px 10px; margin: 3px 4px 0 0;
+    background: var(--red-bg); color: var(--red);
+    border: 1px solid var(--red-border); border-radius: 999px;
+    font-size: 12px; font-weight: 500; text-decoration: none;
+    transition: background 0.12s;
+  }
+  .chip-mailto:hover { background: var(--red-border); }
+
+  /* ---------- Chart cards ---------- */
+  .charts { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .card h3 {
+    margin: 0 0 12px; font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-subtle);
+  }
+  .chart-box { height: 200px; position: relative; }
+
+  /* ---------- Controls ---------- */
+  .controls {
+    display: flex; gap: 8px; margin-bottom: 12px; align-items: center;
+    flex-wrap: wrap;
+  }
+  .filter-btn {
+    position: relative;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13px; font-weight: 500;
+    color: var(--text-muted);
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: all 0.12s;
+  }
+  .filter-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .filter-btn .dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  }
+  .filter-btn[data-filter="red"] .dot { background: var(--red); }
+  .filter-btn[data-filter="yellow"] .dot { background: var(--yellow); }
+  .filter-btn.active { background: var(--text); color: white; border-color: var(--text); }
+  .filter-btn.active .dot { box-shadow: 0 0 0 2px rgba(255,255,255,0.3); }
+
+  /* Tooltip on filter buttons */
+  .filter-btn[data-tip]:hover::after {
+    content: attr(data-tip);
+    position: absolute; top: calc(100% + 8px); left: 0;
+    background: var(--text); color: white;
+    padding: 8px 12px; border-radius: var(--radius-sm);
+    font-size: 12px; font-weight: 400; line-height: 1.45;
+    white-space: normal; width: 260px;
+    box-shadow: var(--shadow-md); z-index: 10;
+  }
+  .filter-btn[data-tip]:hover::before {
+    content: ''; position: absolute; top: calc(100% + 3px); left: 16px;
+    border: 5px solid transparent; border-bottom-color: var(--text); z-index: 10;
+  }
+
+  .search {
+    padding: 6px 12px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    background: var(--surface); font-size: 13px;
+    min-width: 220px; margin-left: auto;
+    color: var(--text);
+  }
+  .search:focus { outline: 2px solid var(--accent); outline-offset: -1px; border-color: transparent; }
+
+  /* ---------- Table ---------- */
+  .table-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: #fafbfc;
+    color: var(--text-subtle);
+    font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 10px 14px; text-align: left;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+    position: relative;
+  }
+  thead th:hover { color: var(--text); background: var(--gray-bg); }
+  thead th .sort-ind { opacity: 0.4; margin-left: 4px; font-size: 10px; }
+  thead th.sorted .sort-ind { opacity: 1; }
+
+  tbody tr.row {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.08s;
+  }
+  tbody tr.row:hover { background: #fafbfc; }
+  tbody tr.row.open { background: #fafbfc; }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+
+  .tier-cell { white-space: nowrap; font-weight: 500; font-size: 12px; }
+  .tier-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+  }
+  .tier-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+  .tier-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid var(--red-border); }
+  .tier-red    .dot { background: var(--red); }
+  .tier-yellow { background: var(--yellow-bg); color: #92400e;       border: 1px solid var(--yellow-border); }
+  .tier-yellow .dot { background: var(--yellow); }
+  .tier-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid var(--green-border); }
+  .tier-green  .dot { background: var(--green); }
+  .tier-incomplete { background: var(--gray-bg); color: var(--gray); border: 1px solid var(--border); }
+  .tier-incomplete .dot { background: var(--gray); }
+
+  .num { font-variant-numeric: tabular-nums; }
+  .muted { color: var(--text-subtle); }
+  .strong { font-weight: 600; }
+  .past-due-pos { color: var(--red); font-weight: 600; }
+
+  .name-cell { font-weight: 500; color: var(--text); }
+  .name-cell .reason {
+    display: block;
+    font-size: 12px; color: var(--text-muted); font-weight: 400; margin-top: 2px;
+  }
+  .chevron {
+    color: var(--text-subtle); transition: transform 0.15s;
+    display: inline-block; margin-right: 6px;
+  }
+  tr.open .chevron { transform: rotate(90deg); color: var(--text); }
+
+  /* Drill-down detail row */
+  tr.detail td {
+    background: #fafbfc; padding: 16px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px;
+    align-items: start;
+  }
+  .detail-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-subtle); font-weight: 600; margin-bottom: 4px;
+  }
+  .reason-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .reason-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 9px; border-radius: 999px;
+    font-size: 12px; font-weight: 500;
+    background: var(--red-bg); color: var(--red);
+    border: 1px solid var(--red-border);
+  }
+  .detail a { color: var(--accent); text-decoration: none; }
+  .detail a:hover { text-decoration: underline; }
+
+  /* ---------- Footer / legend ---------- */
+  footer {
+    margin-top: 28px; padding: 16px 20px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 12px; color: var(--text-muted);
+    box-shadow: var(--shadow-sm);
+  }
+  footer summary {
+    cursor: pointer; font-weight: 600; color: var(--text);
+    list-style: none; user-select: none;
+  }
+  footer summary::-webkit-details-marker { display: none; }
+  footer summary::before { content: '▸ '; color: var(--text-subtle); }
+  footer details[open] summary::before { content: '▾ '; }
+  footer .rule-grid {
+    display: grid; grid-template-columns: 170px 1fr; gap: 8px 16px;
+    margin-top: 12px;
+  }
+  footer .rule-grid dt { font-weight: 500; color: var(--text); }
+  footer .rule-grid dd { margin: 0; }
+  footer .footer-meta { margin-top: 12px; color: var(--text-subtle); font-size: 11px; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 980px) {
+    .charts { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1 id="course-title"></h1>
+  <div class="sub" id="course-sub"></div>
+</header>
+
+<div class="callout" id="callout"></div>
+
+<div class="charts">
+  <div class="card"><h3>Engagement health</h3><div class="chart-box"><canvas id="tierChart"></canvas></div></div>
+  <div class="card"><h3>Grade distribution</h3><div class="chart-box"><canvas id="gradeChart"></canvas></div></div>
+  <div class="card"><h3>Grade vs. days since login</h3><div class="chart-box"><canvas id="scatterChart"></canvas></div></div>
+</div>
+
+<div class="controls">
+  <button class="filter-btn active" data-filter="all">All students</button>
+  <button class="filter-btn" data-filter="red" data-tip="Two or more concerns, OR a single severe one (grade below 60%, or 3+ assignments past due). These students would most benefit from a personal check-in this week.">
+    <span class="dot"></span>Reach out
+  </button>
+  <button class="filter-btn" data-filter="yellow" data-tip="One concern detected — a single missed deadline or a quiet stretch. Worth keeping an eye on, but not urgent.">
+    <span class="dot"></span>Check in
+  </button>
+  <input class="search" id="search" placeholder="Search by name…" />
+</div>
+
+<div class="table-card">
+  <table id="students">
+    <thead><tr>
+      <th data-sort="tier">Status<span class="sort-ind">▾</span></th>
+      <th data-sort="name">Student<span class="sort-ind"></span></th>
+      <th data-sort="days_since_access">Last login<span class="sort-ind"></span></th>
+      <th data-sort="missing_assignments">Past due<span class="sort-ind"></span></th>
+      <th data-sort="grade_pct">Grade<span class="sort-ind"></span></th>
+      <th data-sort="completion_pct">Completion<span class="sort-ind"></span></th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<footer>
+  <details>
+    <summary>How statuses are calculated</summary>
+    <dl class="rule-grid">
+      <dt>🔴 Reach out</dt>
+      <dd>Two or more concerns triggered, or a single severe one (grade below <span id="t-severe-grade"></span>%, or <span id="t-severe-missing"></span>+ assignments past due).</dd>
+      <dt>🟡 Check in</dt>
+      <dd>Exactly one concern triggered.</dd>
+      <dt>🟢 On track</dt>
+      <dd>No concerns triggered.</dd>
+      <dt>Stale-login concern</dt>
+      <dd>No course login in <span id="t-stale"></span> days (or <span id="t-stale-early"></span> days during the first <span id="t-early"></span> days of term).</dd>
+      <dt>Past-due concern</dt>
+      <dd>At least one assignment past its due date with nothing submitted.</dd>
+      <dt>Low-grade concern</dt>
+      <dd>Course running grade below <span id="t-low-grade"></span>%. Skipped automatically if no graded work has been entered yet.</dd>
+      <dt>Low-engagement concern</dt>
+      <dd>Activity completion below half the cohort median. Only applies if completion tracking is enabled.</dd>
+    </dl>
+    <div class="footer-meta" id="footer-meta"></div>
+  </details>
+</footer>
+
+</div>
+
+<script>
+const DATA = {{DATA}};
+const META = {{META}};
+
+// ---- Color tokens (mirror CSS) ----
+const C = {
+  red: '#dc2626', yellow: '#f59e0b', green: '#16a34a', gray: '#6b7280',
+  redBg: '#fef2f2', yellowBg: '#fffbeb', greenBg: '#f0fdf4',
+  textMuted: '#4b5563', textSubtle: '#9ca3af', border: '#e5e7eb'
+};
+const tierColor = t => ({ red: C.red, yellow: C.yellow, green: C.green, incomplete: C.gray })[t];
+const tierLabel = t => ({ red: 'Reach out', yellow: 'Check in', green: 'On track', incomplete: 'No data' })[t];
+
+// ---- Reason text generator ----
+const FLAG_TEXT = {
+  stale_access: d => d.days_since_access == null
+    ? 'never logged in'
+    : `${Math.round(d.days_since_access)}d since login`,
+  missing_work: d => `${d.missing_assignments} past due`,
+  low_grade:    d => `grade ${d.grade_pct}%`,
+  low_engagement: d => d.completion_pct != null
+    ? `${d.completion_pct}% completion`
+    : 'low engagement'
+};
+function reasonsFor(d) { return (d.flags || []).map(f => (FLAG_TEXT[f] || (()=>f))(d)); }
+function reasonText(d) { const r = reasonsFor(d); return r.length ? r.join(' · ') : 'On track'; }
+
+// ---- Header ----
+document.getElementById('course-title').textContent = META.fullname;
+const sub = document.getElementById('course-sub');
+sub.innerHTML = `Course ${META.id} <span class="pill">${DATA.length} students</span>` +
+  `<span class="pill">Day ${META.days_since_start} of term</span>` +
+  `<span class="pill">Generated ${META.generated_at}</span>`;
+
+// ---- Action callout ----
+const reds = DATA.filter(d => d.tier === 'red')
+                 .sort((a,b) => (b.days_since_access||0) - (a.days_since_access||0));
+const callout = document.getElementById('callout');
+if (reds.length) {
+  callout.innerHTML =
+    `<div class="callout-title">✉ Suggested check-ins this week (${reds.length})</div>` +
+    `<div class="callout-body">` +
+      reds.map(r => `<a class="chip-mailto" href="mailto:${r.email}" title="${reasonText(r)}">${r.name}</a>`).join('') +
+    `</div>`;
+} else {
+  callout.classList.add('empty');
+  callout.innerHTML =
+    `<div class="callout-title">✓ Everyone's on track</div>` +
+    `<div class="callout-body">No students currently meet the “reach out” threshold. Nice work.</div>`;
+}
+
+// ---- Charts ----
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif';
+Chart.defaults.font.size = 12;
+Chart.defaults.color = C.textMuted;
+Chart.defaults.plugins.tooltip.backgroundColor = '#111827';
+Chart.defaults.plugins.tooltip.titleColor = '#fff';
+Chart.defaults.plugins.tooltip.bodyColor = '#fff';
+Chart.defaults.plugins.tooltip.padding = 10;
+Chart.defaults.plugins.tooltip.cornerRadius = 6;
+Chart.defaults.plugins.tooltip.boxPadding = 4;
+
+// Donut: engagement tiers
+const tierCounts = { red: 0, yellow: 0, green: 0, incomplete: 0 };
+DATA.forEach(d => tierCounts[d.tier] = (tierCounts[d.tier] || 0) + 1);
+const tierEntries = Object.entries(tierCounts).filter(([_, n]) => n > 0);
+new Chart(document.getElementById('tierChart'), {
+  type: 'doughnut',
+  data: {
+    labels: tierEntries.map(([t]) => `${tierLabel(t)} (${tierCounts[t]})`),
+    datasets: [{
+      data: tierEntries.map(([_, n]) => n),
+      backgroundColor: tierEntries.map(([t]) => tierColor(t)),
+      borderColor: '#fff', borderWidth: 2
+    }]
+  },
+  options: {
+    cutout: '62%',
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { boxWidth: 10, boxHeight: 10, padding: 12, usePointStyle: true, pointStyle: 'circle' } }
+    }
+  }
+});
+
+// Bar: grade distribution
+const bins = Array.from({length: 10}, () => 0);
+const binLabels = ['<10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'];
+DATA.forEach(d => { if (d.grade_pct != null) bins[Math.min(9, Math.floor(d.grade_pct / 10))]++; });
+const binColors = binLabels.map((_, i) => i < 6 ? '#fca5a5' : i < 7 ? '#fcd34d' : '#86efac');
+new Chart(document.getElementById('gradeChart'), {
+  type: 'bar',
+  data: { labels: binLabels, datasets: [{ data: bins, backgroundColor: binColors, borderRadius: 4, borderSkipped: false }] },
+  options: {
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: C.border, drawBorder: false }, ticks: { precision: 0, stepSize: 1 }, beginAtZero: true }
+    }
+  }
+});
+
+// Scatter: grade vs days since access
+new Chart(document.getElementById('scatterChart'), {
+  type: 'scatter',
+  data: { datasets: [{
+    data: DATA.filter(d => d.grade_pct != null).map(d => ({
+      x: d.days_since_access != null ? d.days_since_access : 0, y: d.grade_pct, name: d.name, tier: d.tier
+    })),
+    backgroundColor: ctx => tierColor(ctx.raw && ctx.raw.tier),
+    pointRadius: 5, pointHoverRadius: 7
+  }] },
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => `${ctx.raw.name}: ${ctx.raw.y}% grade, ${ctx.raw.x}d since login` } }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Days since login', color: C.textSubtle, font: { size: 11 } },
+           grid: { color: C.border, drawBorder: false } },
+      y: { title: { display: true, text: 'Grade %', color: C.textSubtle, font: { size: 11 } },
+           min: 0, max: 100, grid: { color: C.border, drawBorder: false } }
+    }
+  }
+});
+
+// ---- Table ----
+let currentFilter = 'all';
+let currentSearch = '';
+let currentSort = 'tier';
+let sortDir = 1;
+const tierOrder = { red: 0, yellow: 1, incomplete: 2, green: 3 };
+
+function rowsToShow() {
+  return DATA
+    .filter(d => currentFilter === 'all' || d.tier === currentFilter)
+    .filter(d => !currentSearch || d.name.toLowerCase().includes(currentSearch))
+    .sort((a, b) => {
+      let va = a[currentSort], vb = b[currentSort];
+      if (currentSort === 'tier') return (tierOrder[va] - tierOrder[vb]) * sortDir;
+      if (currentSort === 'name') return va.localeCompare(vb) * sortDir;
+      if (va == null) va = -Infinity;
+      if (vb == null) vb = -Infinity;
+      return va > vb ? sortDir : va < vb ? -sortDir : 0;
+    });
+}
+
+function fmtNum(v, suffix='') { return v == null ? '<span class="muted">—</span>' : `<span class="num">${v}${suffix}</span>`; }
+
+function render() {
+  // sort indicator
+  document.querySelectorAll('thead th').forEach(th => {
+    const isCurrent = th.dataset.sort === currentSort;
+    th.classList.toggle('sorted', isCurrent);
+    th.querySelector('.sort-ind').textContent = isCurrent ? (sortDir === 1 ? '▾' : '▴') : '';
+  });
+
+  const tbody = document.querySelector('#students tbody');
+  tbody.innerHTML = '';
+  for (const d of rowsToShow()) {
+    const tr = document.createElement('tr');
+    tr.className = 'row';
+    const reasons = reasonsFor(d);
+    const reasonLine = reasons.length ? `<span class="reason">${reasons.join(' · ')}</span>` : '';
+    const pastDueCell = d.missing_assignments > 0
+      ? `<span class="past-due-pos num">${d.missing_assignments}</span>`
+      : `<span class="muted num">0</span>`;
+    tr.innerHTML = `
+      <td class="tier-cell">
+        <span class="tier-pill tier-${d.tier}"><span class="dot"></span>${tierLabel(d.tier)}</span>
+      </td>
+      <td class="name-cell" title="${reasons.length ? 'Reasons: ' + reasons.join('; ') : 'On track'}">
+        <span class="chevron">›</span>${d.name}${reasonLine}
+      </td>
+      <td>${fmtNum(d.days_since_access, 'd')}</td>
+      <td>${pastDueCell}</td>
+      <td>${fmtNum(d.grade_pct, '%')}</td>
+      <td>${fmtNum(d.completion_pct, '%')}</td>
+    `;
+    const detail = document.createElement('tr');
+    detail.className = 'detail';
+    detail.style.display = 'none';
+    const chips = reasons.length
+      ? `<div class="reason-chips">${reasons.map(r => `<span class="reason-chip">${r}</span>`).join('')}</div>`
+      : `<div class="muted">No concerns triggered.</div>`;
+    detail.innerHTML = `<td colspan="6">
+      <div class="detail-grid">
+        <div>
+          <div class="detail-label">Why this status</div>
+          ${chips}
+        </div>
+        <div>
+          <div class="detail-label">Last login</div>
+          <div>${d.last_access_human || '—'}</div>
+        </div>
+        <div>
+          <div class="detail-label">Contact</div>
+          <div><a href="mailto:${d.email}">${d.email || '—'}</a></div>
+          ${(d.groups||[]).length ? `<div class="detail-label" style="margin-top:10px;">Section</div><div>${d.groups.join(', ')}</div>` : ''}
+        </div>
+      </div>
+    </td>`;
+    tr.addEventListener('click', () => {
+      const isOpen = detail.style.display !== 'none';
+      detail.style.display = isOpen ? 'none' : '';
+      tr.classList.toggle('open', !isOpen);
+    });
+    tbody.appendChild(tr);
+    tbody.appendChild(detail);
+  }
+}
+
+// Filters
+document.querySelectorAll('.filter-btn').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.filter-btn').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  currentFilter = b.dataset.filter;
+  render();
+}));
+document.getElementById('search').addEventListener('input', e => {
+  currentSearch = e.target.value.toLowerCase();
+  render();
+});
+document.querySelectorAll('th[data-sort]').forEach(th => th.addEventListener('click', () => {
+  if (currentSort === th.dataset.sort) sortDir *= -1;
+  else { currentSort = th.dataset.sort; sortDir = th.dataset.sort === 'tier' ? 1 : -1; }
+  render();
+}));
+
+// Footer thresholds
+document.getElementById('t-severe-grade').textContent = META.thresholds.severe_grade;
+document.getElementById('t-severe-missing').textContent = META.thresholds.severe_missing;
+document.getElementById('t-stale').textContent = META.thresholds.stale_access;
+document.getElementById('t-stale-early').textContent = META.thresholds.stale_access_early;
+document.getElementById('t-early').textContent = META.thresholds.early_term;
+document.getElementById('t-low-grade').textContent = META.thresholds.low_grade;
+document.getElementById('footer-meta').textContent =
+  `Generated ${META.generated_at} · Dashboard auto-refreshes when re-run.`;
+
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "moodle-teaching-tools",
+  "version": "0.1.0",
+  "description": "Two Claude skills + a guided installer for the Moodle MCP server. Generate at-risk-student dashboards and verify resource links in any NCSU Moodle course.",
+  "author": {
+    "name": "Les Shamblin"
+  },
+  "homepage": "https://github.com/leshamblin/moodle-teaching-tools",
+  "license": "MIT"
+}
