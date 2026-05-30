@@ -12,6 +12,8 @@ Two Claude skills + a guided installer for the Moodle MCP server. Built for NCSU
 
 ## Install
 
+> 👩‍🏫 **New to this? Faculty should follow [`INSTALL.md`](INSTALL.md)** — a plain-language, step-by-step guide (install → get your Moodle token → setup → done) with no coding required. The commands below are the quick reference.
+
 > **Where to run these:** plugin installation only works in **Claude Code** — either the `claude` CLI in a terminal, or the Claude Code side of Claude Desktop (find it in the sidebar). It does **not** work in Cowork or Chat (see [Compatibility](#compatibility) below).
 
 **Option A — slash command** (inside an interactive Claude Code session):
