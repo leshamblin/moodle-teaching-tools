@@ -1,84 +1,43 @@
 # Moodle Teaching Tools
 
-Two Claude skills + a guided installer for the Moodle MCP server. Built for NCSU faculty using Claude Desktop with the [MoodleMCP](https://github.com/leshamblin/MoodleMCP) server.
+Two Claude skills for NCSU faculty: an at-risk-student dashboard and a resource-link audit for any Moodle course.
 
-## What's in the plugin
+## The skills
 
-| Component | What it does |
-|---|---|
-| `/setup-moodle-mcp` | One-time slash command that installs and configures the Moodle MCP server. Run once per machine, then restart Claude Desktop. |
-| `moodle-student-risk` skill | Generates an interactive HTML dashboard identifying at-risk students in any Moodle course. Triggers on phrases like *"check course X for struggling students"* or *"who's behind in MBA 553?"* |
-| `moodle-link-checkup` skill | Audits every resource link in a Moodle course (PDFs, slide decks, external URLs, Google Docs) and produces an HTML report with ✓/✗ per link. Triggers on *"check the links in course X"* or *"audit course resources."* |
+| Skill | What it does | Just say |
+|---|---|---|
+| `moodle-student-risk` | Builds an interactive HTML dashboard of at-risk students in a course | "Check course 9201 for struggling students" |
+| `moodle-link-checkup` | Audits every resource link (PDFs, slide decks, external URLs, Google Docs) and reports a pass or fail per link | "Audit the links in course 9463" |
 
-## Install
+Dashboards and reports are written to `~/Documents/Programming/Demo/` and open in your browser.
 
-> 👩‍🏫 **New to this? Faculty should follow [`INSTALL.md`](INSTALL.md)** — a plain-language, step-by-step guide (install → get your Moodle token → setup → done) with no coding required. The commands below are the quick reference.
+## Prerequisite: the Moodle MCP server
 
-> **Where to run these:** plugin installation only works in **Claude Code** — either the `claude` CLI in a terminal, or the Claude Code side of Claude Desktop (find it in the sidebar). It does **not** work in Cowork or Chat (see [Compatibility](#compatibility) below).
+These skills read Moodle through the **Moodle MCP server**, so set that up first. Installing the server is a separate, one-time step. Follow the **"Install the Moodle MCP in Claude Code"** guide, or see the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
 
-**Option A — slash command** (inside an interactive Claude Code session):
+## Install the plugin
 
-```
-/plugin install github:leshamblin/moodle-teaching-tools
-```
-
-**Option B — two-step marketplace install** (works in the CLI, including non-interactively):
+Plugins install from the **Claude Code CLI** (the `claude` command in a terminal). Note: the Claude Code surface inside the Claude Desktop app does not support `/plugin`, so the plugin is currently for CLI users.
 
 ```
 claude plugin marketplace add leshamblin/moodle-teaching-tools
 claude plugin install moodle-teaching-tools@moodle-teaching-tools
 ```
 
-If you installed from an already-running session, run `/reload-plugins` (or restart Claude Code) to activate it.
-
-Then run the prerequisite installer (one time per machine):
+Inside an interactive `claude` session you can also run:
 
 ```
-/setup-moodle-mcp
+/plugin install github:leshamblin/moodle-teaching-tools
 ```
 
-This installs the Moodle MCP server, asks you for your Moodle URL and Web Services token, patches your `claude_desktop_config.json` (preserving any other MCPs you have), and tells you to restart Claude Desktop.
+If you installed from a running session, run `/reload-plugins` or restart Claude Code.
 
-## Day-to-day use
+## Requirements
 
-After setup, switch to **Claude Cowork** (the structured-task mode in Claude Desktop). The `moodle` connector and both skills appear automatically in the right-hand Context panel. Use natural language:
-
-- *"Check course 9201 for struggling students"* → opens the risk dashboard in your browser
-- *"Audit the links in course 9463"* → opens the link-checkup report
-- *"What's due in MBA 534 this week?"* → answered directly via the Moodle MCP
-
-The dashboards land at `~/Documents/Programming/Demo/`.
-
-You can also use the regular Chat side of Claude Desktop for quick Moodle questions ("list my courses", "show me overdue assignments") — anything that doesn't need the dashboard skills.
-
-## Prerequisites
-
-- **Claude Desktop** signed into a Pro account
-- **Claude Code** enabled (this is how plugins install)
-- **macOS** with Homebrew, **OR** **Windows** with PowerShell
-- An **NCSU Moodle account** with a Web Services token
-
-You don't need to install Python, Node, or git separately — the setup command checks for what's missing and installs it.
-
-## Full setup walkthrough
-
-If you'd rather follow each step by hand, see [`docs/setup-moodle-mcp.md`](docs/setup-moodle-mcp.md) — the same guide the slash command automates.
-
-## Compatibility
-
-| Mode | Install plugin | Run `/setup-moodle-mcp` | Use skills |
-|---|---|---|---|
-| Claude Code | ✓ | ✓ | ✓ |
-| Cowork | ✗ | ✗ | ✓ (skills appear in right panel) |
-| Chat | ✗ | ✗ | ✗ (but Moodle MCP queries work) |
-
-Set up once in Code, then live in Cowork.
-
-## Built on
-
-- [MoodleMCP](https://github.com/leshamblin/MoodleMCP) — the underlying MCP server that talks to Moodle's Web Services API
-- [Chart.js](https://www.chartjs.org/) (CDN-loaded by the dashboard skill)
+- Claude Code CLI
+- The Moodle MCP server installed and connected (see Prerequisite above)
+- An NCSU Moodle account with a Web Services token
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).

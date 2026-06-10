@@ -1,7 +1,7 @@
 {
   "name": "moodle-teaching-tools",
   "version": "0.1.0",
-  "description": "Two Claude skills + a guided installer for the Moodle MCP server. Generate at-risk-student dashboards and verify resource links in any NCSU Moodle course.",
+  "description": "Two Claude skills for NCSU faculty: at-risk-student dashboards and resource-link audits for any Moodle course. Requires the Moodle MCP server, installed separately.",
   "author": {
     "name": "Les Shamblin"
   },
