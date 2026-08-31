@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en" xml:lang="en">
+<head>
+    <title>User report (Jane Doe - SAMPLE) | MBA 561 (001) Spring 2026 Consumer Behavior | Courses 2025-2027</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .sample-banner {
+            background-color: #ffc107;
+            color: #000;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .navbar {
+            background: #fff;
+            padding: 8px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 40px;
+            z-index: 999;
+        }
+        .brick {
+            width: 30px;
+            height: 15px;
+            background: #cc0000;
+            display: inline-block;
+        }
+        .logo {
+            font-weight: bold;
+            color: #333;
+        }
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .user-info {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+        }
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e0e0e0;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .breadcrumb {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .breadcrumb a {
+            color: #cc0000;
+            text-decoration: none;
+        }
+        .page-header {
+            margin-bottom: 20px;
+        }
+        .page-header h1 {
+            color: #cc0000;
+            font-size: 1.4em;
+            font-weight: normal;
+        }
+        .user-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #cc0000;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .user-details {
+            flex: 1;
+        }
+        .user-details h2 {
+            font-size: 1.1em;
+            margin-bottom: 2px;
+        }
+        .user-details p {
+            color: #666;
+            font-size: 12px;
+        }
+        .grade-table-container {
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .user-grade {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .user-grade th,
+        .user-grade td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .user-grade thead th {
+            background: #f8f9fa;
+            font-weight: 600;
+            font-size: 13px;
+            color: #495057;
+        }
+        .user-grade .column-grade {
+            text-align: right;
+            width: 100px;
+        }
+        /* Category rows */
+        .category-row {
+            background: #f8f9fa;
+        }
+        .category-row th {
+            font-weight: 600;
+        }
+        .category-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toggle-icon {
+            color: #666;
+            width: 20px;
+        }
+        /* Item rows */
+        .item-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .item-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .item-type {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #666;
+            display: block;
+        }
+        .item-name {
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        .item-name:hover {
+            text-decoration: underline;
+        }
+        /* Aggregation rows */
+        .agg-row td, .agg-row th {
+            background: #fafafa;
+        }
+        .agg-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #666;
+        }
+        .agg-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+        }
+        /* Indentation using padding */
+        .indent-1 { padding-left: 12px !important; }
+        .indent-2 { padding-left: 32px !important; }
+        .indent-3 { padding-left: 52px !important; }
+
+        @media print {
+            .sample-banner { position: relative; }
+            .navbar { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sample-banner">
+        TEMPLATE - Jane Doe (Fake Student) - For Demonstration Purposes Only
+    </div>
+
+    <nav class="navbar">
+        <span class="brick"></span>
+        <span class="logo">WolfWare</span>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Dashboard</a>
+            <a href="#">My courses</a>
+        </div>
+        <div class="user-info">
+            <img class="avatar" src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&s=32" alt="">
+            <span>Jane Doe</span>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="breadcrumb">
+            <a href="#">Home</a> / <a href="#">MBA 561 (001) Spring 2026</a> / <a href="#">Grades</a> / User report
+        </div>
+
+        <div class="page-header">
+            <h1>MBA 561 (001) Spring 2026 Consumer Behavior</h1>
+        </div>
+
+        <div class="user-card">
+            <div class="user-avatar">JD</div>
+            <div class="user-details">
+                <h2>Jane Doe</h2>
+                <p>jadoe@ncsu.edu</p>
+            </div>
+        </div>
+
+        <div class="grade-table-container">
+            <table class="user-grade">
+                <thead>
+                    <tr>
+                        <th>Grade item</th>
+                        <th class="column-grade">Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Main Course Category -->
+                    <tr class="category-row">
+                        <th class="indent-1">
+                            <div class="category-content">
+                                <span class="toggle-icon"><i class="fa fa-chevron-down"></i></span>
+                                <span>Course Points (1000 available)</span>
+                            </div>
+                        </th>
+                        <td class="column-grade"></td>
+                    </tr>
+
+                    <!-- Current Points Earned -->
+                    <tr class="agg-row">
+                        <th class="indent-2">
+                            <div class="item-content">
+                                <img class="agg-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z'/%3E%3C/svg%3E" alt="Sum">
+                                <div>
+                                    <span class="agg-label">Aggregation</span>
+                                    <div>Current Points Earned:</div>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">932.00</td>
+                    </tr>
+
+                    <!-- Participation Activities Category -->
+                    <tr class="category-row">
+                        <th class="indent-2">
+                            <div class="category-content">
+                                <span class="toggle-icon"><i class="fa fa-chevron-down"></i></span>
+                                <span>Participation activities</span>
+                            </div>
+                        </th>
+                        <td class="column-grade"></td>
+                    </tr>
+
+                    <!-- Participation Total -->
+                    <tr class="agg-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <img class="agg-icon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'%3E%3Cpath d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H6v-2h6v2zm4-4H6v-2h10v2zm0-4H6V7h10v2z'/%3E%3C/svg%3E" alt="Sum">
+                                <div>
+                                    <span class="agg-label">Aggregation</span>
+                                    <div>Participation activities total</div>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">170.00</td>
+                    </tr>
+
+                    <!-- Participation Items -->
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation Activity 1 (Five Points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation 2 Forum (5 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 3 Submission</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">9.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation 4 (worth 5 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation 5: Forum on Categorizing (5 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 6 Submission (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">10.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 7 Group Case (25 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">23.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 8 Group Case (25 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">24.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 9 (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">10.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation 10 (5 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 11 (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">10.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 12 Group Case (25 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">25.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-comments" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Forum</span>
+                                    <a href="#" class="item-name">Participation 13 (5 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">5.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 14 (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">9.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 15 (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">10.00</td>
+                    </tr>
+
+                    <tr class="item-row">
+                        <th class="indent-3">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Participation 16 (10 points)</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">10.00</td>
+                    </tr>
+
+                    <!-- Exam 1 -->
+                    <tr class="item-row">
+                        <th class="indent-2">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-question-circle" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Quiz</span>
+                                    <a href="#" class="item-name">Exam 1</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">315.00</td>
+                    </tr>
+
+                    <!-- Final Exam -->
+                    <tr class="item-row">
+                        <th class="indent-2">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-question-circle" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Quiz</span>
+                                    <a href="#" class="item-name">Final Exam</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">329.00</td>
+                    </tr>
+
+                    <!-- Consumer Behavior Insights Final Deliverable -->
+                    <tr class="item-row">
+                        <th class="indent-2">
+                            <div class="item-content">
+                                <span class="item-icon"><i class="fa fa-file-alt" style="color: #0d6efd;"></i></span>
+                                <div>
+                                    <span class="item-type">Assignment</span>
+                                    <a href="#" class="item-name">Consumer Behavior Insights Final Deliverable</a>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="column-grade">118.00</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 20px; color: #666; font-size: 12px; background: #fff; margin-top: 20px; border-top: 1px solid #ddd;">
+        TEMPLATE - Generated for demonstration purposes
+    </footer>
+</body>
+</html>

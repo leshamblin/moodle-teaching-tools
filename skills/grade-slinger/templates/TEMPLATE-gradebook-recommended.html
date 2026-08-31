@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBA 561 Gradebook Setup - Recommended Configuration</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .date {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        h1 {
+            color: #cc0000;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1em;
+        }
+        h2 {
+            color: #333;
+            font-size: 1.3em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #cc0000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: 600;
+            color: #333;
+        }
+        .settings-table td:first-child {
+            width: 60%;
+        }
+        .settings-table td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: #cc0000;
+        }
+        .structure-table .indent-1 td:first-child {
+            padding-left: 30px;
+        }
+        .structure-table .indent-2 td:first-child {
+            padding-left: 60px;
+        }
+        .structure-table .category {
+            background-color: #f8f8f8;
+            font-weight: 600;
+        }
+        .structure-table .total {
+            font-style: italic;
+            color: #666;
+        }
+        .structure-table .course-total {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .badge-natural {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        .note-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #cc0000;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        .note-box h3 {
+            color: #cc0000;
+            font-size: 1em;
+            margin-bottom: 8px;
+        }
+        .note-box p {
+            color: #555;
+            font-size: 0.95em;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .note-box {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="date">1/19/26, 9:00 AM</div>
+        <h1>MBA 561 Consumer Behavior</h1>
+        <div class="subtitle">Recommended Moodle Gradebook Configuration - Spring 2026</div>
+    </div>
+
+    <h2>Course-Level Settings</h2>
+    <table class="settings-table">
+        <tbody>
+            <tr>
+                <td>Aggregation</td>
+                <td>Natural (Sum of grades)</td>
+            </tr>
+            <tr>
+                <td>Show grade as</td>
+                <td>Real (points)</td>
+            </tr>
+            <tr>
+                <td>Exclude empty grades</td>
+                <td>No (include empty grades)</td>
+            </tr>
+            <tr>
+                <td>Hide totals if they contain hidden items</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>"No Surprises" Settings</h2>
+    <p style="margin-bottom: 15px; color: #555;">These settings have been configured to minimize end-of-semester surprises and keep grade totals consistent throughout the term:</p>
+    <table class="settings-table">
+        <tbody>
+            <tr>
+                <td>Show hidden items</td>
+                <td>Show hidden</td>
+            </tr>
+            <tr>
+                <td>Exclude hidden items from totals</td>
+                <td>Do not exclude</td>
+            </tr>
+            <tr>
+                <td>Hide totals if they contain hidden items</td>
+                <td>Show totals</td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 10px; color: #555; font-size: 0.95em;">Students' course totals always reflect their current standing, including graded items that are hidden.</p>
+
+    <h2>Configuration Notes</h2>
+
+    <div class="note-box">
+        <h3>Why include empty grades?</h3>
+        <p>Since students see points (not percentages), including empty grades lets them watch their points accumulate toward 1000. This creates a sense of progression rather than showing an artificially high percentage early in the semester.</p>
+    </div>
+
+    <div class="note-box">
+        <h3>Student-Friendly Category Names (Natural Aggregation)</h3>
+        <p>When using Natural (Sum of grades) aggregation, rename the top-level course category to <strong>"Course Points (X available)"</strong> where X is the total points possible (e.g., "Course Points (1000 available)"). Also rename the course total aggregation row to <strong>"Current Points Earned:"</strong> instead of "Course total". This makes it immediately clear to students how many points they can earn and how many they've accumulated.</p>
+    </div>
+
+    <div class="note-box">
+        <h3>Current Setup Analysis</h3>
+        <p>Your current gradebook is already well-configured with the correct point totals matching the syllabus. The participation activities category contains various items (5-25 points each) totaling 175 points. Consider keeping item names concise for easier student navigation.</p>
+    </div>
+
+    <h2>Gradebook Structure</h2>
+    <table class="structure-table">
+        <thead>
+            <tr>
+                <th>NAME</th>
+                <th>WEIGHT</th>
+                <th>MAX GRADE</th>
+                <th>STATUS</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="category">
+                <td>Course Points (1000 available)</td>
+                <td>-</td>
+                <td>1000.00</td>
+                <td><span class="badge badge-natural">Natural</span></td>
+            </tr>
+            <tr class="indent-1 category">
+                <td>Exams</td>
+                <td>70.0%</td>
+                <td>-</td>
+                <td><span class="badge badge-natural">Natural</span></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Exam 1</td>
+                <td>50.0%</td>
+                <td>350.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Final Exam</td>
+                <td>50.0%</td>
+                <td>350.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2 total">
+                <td><em>Exams total</em></td>
+                <td>-</td>
+                <td><em>700.00</em></td>
+                <td></td>
+            </tr>
+            <tr class="indent-1 category">
+                <td>Participation Activities</td>
+                <td>17.5%</td>
+                <td>-</td>
+                <td><span class="badge badge-natural">Natural</span></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Participation Activity 1</td>
+                <td>2.86%</td>
+                <td>5.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Participation Activity 2</td>
+                <td>2.86%</td>
+                <td>5.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Participation Activity 3</td>
+                <td>5.71%</td>
+                <td>10.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2">
+                <td>... (participation items vary)</td>
+                <td>varies</td>
+                <td>5-25 pts</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2 total">
+                <td><em>Participation total</em></td>
+                <td>-</td>
+                <td><em>175.00</em></td>
+                <td></td>
+            </tr>
+            <tr class="indent-1 category">
+                <td>Consumer Insight Project</td>
+                <td>12.5%</td>
+                <td>-</td>
+                <td><span class="badge badge-natural">Natural</span></td>
+            </tr>
+            <tr class="indent-2">
+                <td>Consumer Behavior Insights Final Deliverable</td>
+                <td>100%</td>
+                <td>125.00</td>
+                <td></td>
+            </tr>
+            <tr class="indent-2 total">
+                <td><em>Consumer Insight Project total</em></td>
+                <td>-</td>
+                <td><em>125.00</em></td>
+                <td></td>
+            </tr>
+            <tr class="course-total">
+                <td>Current Points Earned:</td>
+                <td>-</td>
+                <td>1000.00</td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Letter Grade Scale</h2>
+    <p style="margin-bottom: 15px; color: #666;">Custom scale based on syllabus (configure in Gradebook > Setup > Letters)</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Grade</th>
+                <th>A+</th>
+                <th>A</th>
+                <th>A-</th>
+                <th>B+</th>
+                <th>B</th>
+                <th>B-</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Points</strong></td>
+                <td>970+</td>
+                <td>930-969</td>
+                <td>900-929</td>
+                <td>870-899</td>
+                <td>830-869</td>
+                <td>800-829</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>Grade</th>
+                <th>C+</th>
+                <th>C</th>
+                <th>C-</th>
+                <th>D+</th>
+                <th>D</th>
+                <th>D-</th>
+                <th>F</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Points</strong></td>
+                <td>770-799</td>
+                <td>730-769</td>
+                <td>700-729</td>
+                <td>670-699</td>
+                <td>630-669</td>
+                <td>600-629</td>
+                <td>&lt;600</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <p>Generated for MBA 561 Spring 2026 - Dr. Stefanie Robinson</p>
+    </div>
+</body>
+</html>

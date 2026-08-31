@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradebook Best Practices</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #fff;
+        }
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        h1 {
+            color: #cc0000;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            font-size: 1em;
+        }
+        h2 {
+            color: #333;
+            font-size: 1.1em;
+            margin-top: 25px;
+            margin-bottom: 10px;
+        }
+        .practice {
+            margin-bottom: 20px;
+        }
+        .practice-title {
+            color: #cc0000;
+            font-weight: 600;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+        .practice-content {
+            color: #444;
+            font-size: 0.95em;
+            margin-left: 20px;
+        }
+        .practice-content p {
+            margin-bottom: 8px;
+        }
+        .practice-content ul {
+            margin-left: 20px;
+            margin-bottom: 8px;
+        }
+        .practice-content li {
+            margin-bottom: 5px;
+        }
+        .practice-content a {
+            color: #cc0000;
+        }
+        .highlight-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #cc0000;
+            padding: 12px 15px;
+            margin: 10px 0 10px 20px;
+            font-size: 0.9em;
+        }
+        .highlight-box strong {
+            color: #cc0000;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        @media print {
+            body {
+                padding: 20px;
+            }
+            .practice {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Gradebook Best Practices</h1>
+        <div class="subtitle">Recommendations for Transparent and Accurate Grade Reporting</div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">1. View Grades from the Student Perspective</div>
+        <div class="practice-content">
+            <p>During the semester, use Moodle's "User report" feature to view a live version of any student's grade report. This is the best way to verify grades and catch issues early—you'll see exactly what students see.</p>
+            <p><a href="https://ncsu.service-now.com/delta?id=kb_article_ml&sys_id=8e510ede83e92610a35714326daad3be">How to View a User Report in Moodle</a></p>
+        </div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">2. Unhide All Graded Categories</div>
+        <div class="practice-content">
+            <p>Any category that contributes to the final grade should be visible to students throughout the semester. This allows students to track their actual standing and address concerns before final grades are calculated. Hidden categories create a disconnect between what students see and what is actually calculated.</p>
+        </div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">3. Understand the Two Types of "Hidden" in Moodle</div>
+        <div class="practice-content">
+            <p>There are two ways to hide items, and they behave differently:</p>
+            <ul>
+                <li><strong>Gradebook-level hiding</strong> (Grades → Gradebook setup → eye icon): The "No Surprises" settings control this. Students can see the grade item listed but not the grade value.</li>
+                <li><strong>Activity/Section-level hiding</strong> (course page → Edit → Hide): When an activity or section is hidden on the course page, its grade item is <strong>completely invisible</strong> to students regardless of gradebook settings.</li>
+            </ul>
+            <div class="highlight-box">
+                <strong>Recommended:</strong> To show a grade item while restricting submissions, make the activity (and its section) visible on the course page, then use <strong>Restrict Access</strong> settings to control when students can submit.
+            </div>
+        </div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">4. Check for Orphaned Items</div>
+        <div class="practice-content">
+            <p>After gradebook setup, verify that all grade items are inside their proper categories. New grade items often appear at the bottom of the gradebook and uncategorized—this happens when an activity is created without selecting a category, or when an LTI tool syncs a grade item automatically. Orphaned items can affect weight calculations and student visibility.</p>
+        </div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">5. Audit Gradebook and Establish a Review Period</div>
+        <div class="practice-content">
+            <p>Before calculating final grades, review the gradebook setup to verify:</p>
+            <ul>
+                <li>All categories are visible</li>
+                <li>Weights match the syllabus</li>
+                <li>No grade items are unexpectedly hidden or excluded</li>
+                <li>The displayed course total matches expectations for sample students</li>
+            </ul>
+            <p>Publish preliminary final grades in Moodle several days before submitting to SIS. This creates a window for students to review their grades and raise questions while corrections can still be made easily. A 3-5 day review period is recommended.</p>
+        </div>
+    </div>
+
+    <div class="practice">
+        <div class="practice-title">6. Communicate Grade Visibility to Students</div>
+        <div class="practice-content">
+            <p>If certain categories must be hidden temporarily (e.g., pending grade entry), communicate this to students so they understand the displayed total may not reflect their complete grade. A course announcement or gradebook note can set appropriate expectations.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Poole College Instructional Design | poole_instructional_design@ncsu.edu</p>
+    </div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 # Moodle Teaching Tools
 
-Two Claude skills for NCSU faculty: an at-risk-student dashboard and a resource-link audit for any Moodle course.
+Three Claude skills for NCSU faculty: an at-risk-student dashboard, a resource-link audit, and Moodle gradebook setup with instructor deliverables.
 
 ## The skills
 
@@ -8,12 +8,20 @@ Two Claude skills for NCSU faculty: an at-risk-student dashboard and a resource-
 |---|---|---|
 | `moodle-student-risk` | Builds an interactive HTML dashboard of at-risk students in a course | "Check course 9201 for struggling students" |
 | `moodle-link-checkup` | Audits every resource link (PDFs, slide decks, external URLs, Google Docs) and reports a pass or fail per link | "Audit the links in course 9463" |
+| `grade-slinger` | Configures a Moodle gradebook to match the syllabus, then produces four instructor deliverables: a Configuration Report PDF, a sample User Report PDF, a bespoke Excel grade calculator, and a Best Practices PDF | "gb" or "set up a gradebook for MIE 412" |
 
-Dashboards and reports are written to `~/Documents/Programming/Demo/` and open in your browser.
+Dashboards and link reports are written to `~/Documents/Programming/Demo/` and open in your browser.
+Grade Slinger asks where to put course folders the first time you run it and defaults to
+`~/Documents/Claude/Gradebooks/`.
 
 ## Prerequisite: the Moodle MCP server
 
-These skills read Moodle through the **Moodle MCP server**, so set that up first. Installing the server is a separate, one-time step. Follow the **"Install the Moodle MCP in Claude Code"** guide, or see the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
+`moodle-student-risk` and `moodle-link-checkup` read Moodle through the **Moodle MCP server**, so set
+that up first. **Grade Slinger does not need it** — it works from the syllabus and a gradebook-setup
+PDF you export yourself, and only uses the MCP to spot-check live gradebook state if it happens to be
+connected.
+
+Installing the server is a separate, one-time step. Follow the **"Install the Moodle MCP in Claude Code"** guide, or see the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
 
 ## Install the plugin
 
@@ -35,8 +43,10 @@ If you installed from a running session, run `/reload-plugins` or restart Claude
 ## Requirements
 
 - Claude Code CLI
-- The Moodle MCP server installed and connected (see Prerequisite above)
-- An NCSU Moodle account with a Web Services token
+- For `moodle-student-risk` and `moodle-link-checkup`: the Moodle MCP server installed and connected
+  (see Prerequisite above), and an NCSU Moodle account with a Web Services token
+- For `grade-slinger`: Google Chrome or Chromium (HTML-to-PDF), and `python3` with `openpyxl`.
+  `PyPDF2` is optional and only trims trailing blank pages from generated PDFs.
 
 ## License
 

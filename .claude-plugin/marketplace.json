@@ -1,6 +1,6 @@
 {
   "name": "moodle-teaching-tools",
-  "description": "Two Claude skills for NCSU faculty: at-risk-student dashboards and resource-link audits for any Moodle course. Requires the Moodle MCP server, installed separately.",
+  "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables.",
   "owner": {
     "name": "Les Shamblin"
   },
@@ -8,7 +8,7 @@
     {
       "name": "moodle-teaching-tools",
       "source": "./",
-      "description": "Two Claude skills for NCSU faculty: at-risk-student dashboards and resource-link audits for any Moodle course. Requires the Moodle MCP server, installed separately."
+      "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables."
     }
   ]
 }
