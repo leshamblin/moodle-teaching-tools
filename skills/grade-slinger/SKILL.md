@@ -10,7 +10,7 @@ A guided workflow for configuring a Moodle gradebook to match a course syllabus,
 1. **Gradebook Configuration Report** (PDF) — what was configured, with category weights and effective course percentages
 2. **Sample User Report** (PDF) — fake student "Jane Doe" showing how students will see the gradebook
 3. **Grade Calculator** (Excel) — bespoke per course, with per-item input cells and weighted formulas
-4. **Gradebook Best Practices** (PDF) — same for every course, copied from `templates/`
+4. **Gradebook Best Practices** (PDF) — same body for every course, rendered from `templates/TEMPLATE-Best-Practices.html` with your own contact details in the footer
 
 ## When this skill triggers
 
@@ -102,7 +102,30 @@ See `references/excel-calculator-spec.md` for the column structure, formulas, st
 
 ### D. Best Practices (PDF)
 
-Copy `templates/Gradebook-Best-Practices.pdf` directly into the course folder. Same for every course — no customization needed.
+Copy `templates/TEMPLATE-Best-Practices.html`, substitute the placeholders (see **Template
+placeholders** below — this file uses `{AFFILIATION}` and `{CONTACT_EMAIL}`), then convert with
+`scripts/html_to_pdf.sh` and delete the HTML. Save as `Gradebook-Best-Practices.pdf`.
+
+The body is the same for every course; only the footer changes, and it comes from the user config so
+the document carries **your** name and contact details rather than whoever built the skill. Do not
+ship a pre-rendered Best Practices PDF — a baked-in footer is how another organization's contact
+address ends up on your handout.
+
+## Template placeholders
+
+Every `templates/*.html` file uses curly-brace placeholders. Substitute all of them before
+converting to PDF, and grep the HTML for a stray `{` before you delete it.
+
+| Placeholder | Source | Appears in |
+|-------------|--------|-----------|
+| `{CONTACT_EMAIL}` | `email` from `~/Documents/Claude/Gradebooks/.gradebook-config.json` | Configuration Report disclaimer, Best Practices footer |
+| `{AFFILIATION}` | `affiliation` from the same config | Best Practices footer |
+| `{COURSE}` | the course being configured, e.g. "MIE 412 Fall 2026" | Configuration Report footer |
+| `{INSTRUCTOR}` | the instructor's name, e.g. "Dr. Chris Littel" | Configuration Report footer |
+
+The sample course content inside the templates (MBA 561, Consumer Behavior, the grade items) is
+example material, not a placeholder — rewrite it wholesale for the course at hand as described in
+sections A and B.
 
 ## Step 5 — Clean up
 

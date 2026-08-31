@@ -1,6 +1,6 @@
 # Gradebook Best Practices
 
-These are the same six practices included in the bundled `templates/Gradebook-Best-Practices.pdf`. Refer to the PDF for the polished version delivered to instructors. This markdown copy is for reference inside the skill.
+These are the same six practices laid out in `templates/TEMPLATE-Best-Practices.html`, which is rendered to `Gradebook-Best-Practices.pdf` per course (see SKILL.md section D). That HTML is the polished version delivered to instructors; this markdown copy is for reference inside the skill.
 
 ## 1. View Grades from the Student Perspective
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.2 — 2026-08-31
+
+- **Fixed** the Best Practices footer, which was hardcoded to
+  `Poole College Instructional Design | poole_instructional_design@ncsu.edu` and baked into the
+  pre-rendered `templates/Gradebook-Best-Practices.pdf`. Every instructor who received that handout
+  got Poole's contact details, and any other institution installing the skill would have too. The
+  footer is now `{AFFILIATION} | {CONTACT_EMAIL}`, substituted from the user config.
+- **Changed** SKILL.md section D: Best Practices is now rendered from
+  `templates/TEMPLATE-Best-Practices.html` per course, the same way the Configuration Report and
+  User report are, instead of copying a pre-rendered PDF. Copying a baked binary is what made the
+  footer unfixable. No new dependency — sections A and B already need Chrome.
+- **Removed** `templates/Gradebook-Best-Practices.pdf`. It was a second source of truth for the same
+  content, and the stale one.
+- **Fixed** the Configuration Report footer, which held the sample course and instructor
+  (`MBA 561 Spring 2026 - Dr. Stefanie Robinson`). Now `{COURSE} - {INSTRUCTOR}`. No real report had
+  leaked it, but nothing prevented it.
+- **Added** a **Template placeholders** table to SKILL.md documenting `{CONTACT_EMAIL}`,
+  `{AFFILIATION}`, `{COURSE}` and `{INSTRUCTOR}`, their sources, and where each appears.
+
 ## 1.1 — 2026-08-31
 
 - **Added** required User report settings to `references/no-surprises-settings.md`: **Show feedback**
