@@ -74,7 +74,8 @@ Copy `templates/TEMPLATE-gradebook-recommended.html` and customize it for this c
 - **Tone**: Written as a COMPLETED ACTION REPORT (past tense — "has been configured", "was set to", "was renamed"). It reports completed work, not recommendations.
 - **Title**: "Gradebook Configuration Report"
 - **Required disclaimer**: Insert the disclaimer (see `references/disclaimer.md`) immediately after the header, in a yellow warning box (`#fff3cd` background). The contact email comes from the user config.
-- **Sections**: Course-level settings → "No Surprises" settings → Gradebook Structure table with a **"COURSE %" column** showing each item's effective course contribution → **Effective Course Weights** section showing every individual item's calculation (e.g., "17.647% × 85% = 15%") → Letter Grade Scale → Configuration Notes
+- **Sections**: Course-level settings → "No Surprises" settings → **top-level category summary** (just the categories that divide the course grade, and their sum) → Gradebook Structure table with a **"COURSE %" column** showing each item's effective course contribution → **Effective Course Weights** section showing every individual item's calculation (e.g., "17.647% × 85% = 15%") → Letter Grade Scale → Configuration Notes
+- **Nested sub-categories**: if any category contains a sub-category, its weight must be stated as a share of its parent ("RBIs — 50% of Participation"), never only as a course percentage — otherwise it reads as a top-level category. See the "Nested Sub-Categories" section of `references/aggregation-rules.md` for the six things to do.
 - See `references/no-surprises-settings.md` for the required course grade settings and their wording
 - See `references/aggregation-rules.md` for natural vs weighted specifics
 - See `references/letter-grade-scale.md` for the default Moodle scale (only change if syllabus uses non-standard cutoffs)

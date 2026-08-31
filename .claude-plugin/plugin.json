@@ -1,6 +1,6 @@
 {
   "name": "moodle-teaching-tools",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables.",
   "author": {
     "name": "Les Shamblin"

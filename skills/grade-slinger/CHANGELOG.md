@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.3 — 2026-08-31
+
+- **Added** a "Nested Sub-Categories" section to `references/aggregation-rules.md`. A sub-category
+  inside a weighted category must be reported as a share of its **parent**, not only as a course
+  percentage. Printing "RBIs 7.50%" in the same column as "Attendance 15.00%" reads as though the
+  two were peer categories, when one is top-level and the other is half of Participation. The
+  section specifies six things to do: lead with a top-level category summary table, annotate the
+  nested row with its share of the parent and what it is not, annotate the parent's other items the
+  same way, write the calculation in terms of the parent, add a Configuration Note explaining how
+  the parent divides, and phrase any name-embedded weight as the share of the parent.
+- **Changed** SKILL.md section A: the Configuration Report now leads with a top-level category
+  summary table before the full structure table, and carries an explicit rule for nested
+  sub-categories.
+
 ## 1.2 — 2026-08-31
 
 - **Fixed** the Best Practices footer, which was hardcoded to
