@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.4 — 2026-09-02
+
+- **Added** a "Not Graded Parking Category" section to `references/common-issues.md`. Instructors
+  park unwanted LTI grade items in a hidden 0%-weight category so the links can stay on the course
+  page without cluttering the gradebook. Two problems go unreported today. First, the category is
+  not actually hidden from students: **Show hidden items = Show hidden** is a required "No
+  Surprises" setting, so the category name and its items appear in the student user report even
+  though the grades don't — hiding it removes it from the instructor's working view, not the
+  student's, and turning that setting off to suppress it is not an acceptable trade. Second, a
+  genuinely graded assignment parked in a 0%-weight category earns nothing no matter what score is
+  entered, and because the category is hidden and collapsed nobody trips over it. The section
+  carries the preferred fix (Grade → Type → None on the External tool activity, which creates no
+  grade item at all and leaves the No Surprises settings untouched), the two caveats to check first
+  (existing grades are destroyed with the item, and some LTI tools re-create it unless "Accept
+  grades from the tool" is also unchecked), and ready-made report text.
+- **Changed** SKILL.md Step 3: reviewing a gradebook now includes an explicit check for a hidden or
+  0%-weight parking category, before the aggregation decision.
+- **Changed** SKILL.md section A: the Configuration Report must report a parking category's hidden
+  status and 0% weight, note that students still see it listed, and instruct the professor to
+  verify item by item that nothing graded is inside.
+- **Changed** the identity examples in SKILL.md Step 0 and `config/user-config.example.json` from
+  the skill author's real name, live email alias and department to a generic "Ms. Wuf" /
+  `msWuf@ncsu.edu` / "Instructional Design". They were only examples of what to ask during first-run
+  setup, never substituted into a deliverable, but a real working address shipped to everyone who
+  installed the public plugin. Same category as the v1.2 footer leak, one layer earlier.
+
 ## 1.3 — 2026-08-31
 
 - **Added** a "Nested Sub-Categories" section to `references/aggregation-rules.md`. A sub-category

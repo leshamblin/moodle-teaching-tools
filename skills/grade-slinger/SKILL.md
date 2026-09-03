@@ -20,9 +20,9 @@ Trigger phrases include: "gb", "set up gradebook", "configure gradebook", "revie
 
 Before doing anything else, check for `~/Documents/Claude/Gradebooks/.gradebook-config.json`. If it doesn't exist, this is the user's first time running the skill — walk them through the one-time setup:
 
-1. Ask for their full name (e.g., "Elizabeth Shamblin")
-2. Ask for their preferred contact email (e.g., "elizabeth@ncsu.edu")
-3. Ask for their department/college affiliation (e.g., "Poole College Instructional Design")
+1. Ask for their full name (e.g., "Ms. Wuf")
+2. Ask for their preferred contact email (e.g., "msWuf@ncsu.edu")
+3. Ask for their department/college affiliation (e.g., "Instructional Design")
 4. Confirm the default course folder root is `~/Documents/Claude/Gradebooks/` or let them override
 5. Create `~/Documents/Claude/Gradebooks/` if it doesn't exist
 6. Write the config file as JSON with keys `name`, `email`, `affiliation`, `course_folder_root`
@@ -60,8 +60,9 @@ Once the three files are present:
 1. Read the syllabus and extract the grading structure (categories, weights or point values, letter grade scale)
 2. Read the gradebook setup PDF and extract the current Moodle configuration
 3. Identify discrepancies between the two
-4. Decide which aggregation type fits (see `references/aggregation-rules.md`)
-5. If the Moodle MCP is connected and the user wants live verification, offer to call `mcp__moodle__moodle_get_grade_items` to confirm the gradebook state matches the PDF
+4. Check for a hidden or 0%-weight **parking category** — usually named "Not Graded", "Not for Credit", or "LTI" — holding grade items the instructor didn't want in the gradebook. See the "Not Graded Parking Category" section of `references/common-issues.md` before writing it up: the fix is usually Grade → Type → None on the activity, not a hidden category
+5. Decide which aggregation type fits (see `references/aggregation-rules.md`)
+6. If the Moodle MCP is connected and the user wants live verification, offer to call `mcp__moodle__moodle_get_grade_items` to confirm the gradebook state matches the PDF
 
 ## Step 4 — Produce the four deliverables
 
@@ -76,6 +77,7 @@ Copy `templates/TEMPLATE-gradebook-recommended.html` and customize it for this c
 - **Required disclaimer**: Insert the disclaimer (see `references/disclaimer.md`) immediately after the header, in a yellow warning box (`#fff3cd` background). The contact email comes from the user config.
 - **Sections**: Course-level settings → "No Surprises" settings → **top-level category summary** (just the categories that divide the course grade, and their sum) → Gradebook Structure table with a **"COURSE %" column** showing each item's effective course contribution → **Effective Course Weights** section showing every individual item's calculation (e.g., "17.647% × 85% = 15%") → Letter Grade Scale → Configuration Notes
 - **Nested sub-categories**: if any category contains a sub-category, its weight must be stated as a share of its parent ("RBIs — 50% of Participation"), never only as a course percentage — otherwise it reads as a top-level category. See the "Nested Sub-Categories" section of `references/aggregation-rules.md` for the six things to do.
+- **Parking category**: if the gradebook has a hidden or 0%-weight category holding parked items ("Not Graded" and friends), the report must state that it is hidden and weighted 0%, note that students still see it listed in their user report, and tell the instructor to verify item by item that nothing genuinely graded is sitting in it. Ready-made report text is in the "Not Graded Parking Category" section of `references/common-issues.md`
 - See `references/no-surprises-settings.md` for the required course grade settings and their wording
 - See `references/aggregation-rules.md` for natural vs weighted specifics
 - See `references/letter-grade-scale.md` for the default Moodle scale (only change if syllabus uses non-standard cutoffs)
@@ -146,7 +148,7 @@ Load these on demand — don't read them all upfront.
 - `references/no-surprises-settings.md` — Required course grade settings + wording (including the "two types of hidden" note)
 - `references/aggregation-rules.md` — Natural (points-based) vs Weighted Mean specifics
 - `references/letter-grade-scale.md` — Default Moodle plus/minus scheme
-- `references/common-issues.md` — LTI grade sync, unclear category weight distribution, orphaned items
+- `references/common-issues.md` — LTI grade sync, the hidden "Not Graded" parking category, unclear category weight distribution, orphaned items
 - `references/excel-calculator-spec.md` — Column structure, formulas, styling, hover comments
 - `references/best-practices.md` — The 6-point list (same content as the bundled PDF)
 - `references/email-template.md` — The handoff email
