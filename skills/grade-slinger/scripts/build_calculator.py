@@ -115,7 +115,7 @@ def build_calculator(
     # ----- Title and header rows -----
     mode_label = "Full" if mode == "full" else "Abbreviated"
     ws.merge_cells("A1:D1")
-    ws["A1"] = f"{course_name} — Grade Calculator ({mode_label})"
+    ws["A1"] = f"{course_name}: Grade Calculator ({mode_label})"
     ws["A1"].font = Font(bold=True, color=NCSU_RED, size=14)
     ws["A1"].alignment = Alignment(horizontal="left", vertical="center")
     ws.row_dimensions[1].height = 24

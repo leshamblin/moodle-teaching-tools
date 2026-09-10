@@ -63,6 +63,7 @@ Once the three files are present:
 4. Check for a hidden or 0%-weight **parking category** — usually named "Not Graded", "Not for Credit", or "LTI" — holding grade items the instructor didn't want in the gradebook. See the "Not Graded Parking Category" section of `references/common-issues.md` before writing it up: the fix is usually Grade → Type → None on the activity, not a hidden category
 5. Decide which aggregation type fits (see `references/aggregation-rules.md`)
 6. If the Moodle MCP is connected and the user wants live verification, offer to call `mcp__moodle__moodle_get_grade_items` to confirm the gradebook state matches the PDF
+7. If a setting is not what a previous review or report said it was, do **not** conclude anything from the course log until you have read the "Who Changed a Setting" section of `references/common-issues.md`. The log's "Teaching" filter hides every grade edit, and the log never records which field changed.
 
 ## Step 4 — Produce the four deliverables
 
@@ -148,7 +149,7 @@ Load these on demand — don't read them all upfront.
 - `references/no-surprises-settings.md` — Required course grade settings + wording (including the "two types of hidden" note)
 - `references/aggregation-rules.md` — Natural (points-based) vs Weighted Mean specifics
 - `references/letter-grade-scale.md` — Default Moodle plus/minus scheme
-- `references/common-issues.md` — LTI grade sync, the hidden "Not Graded" parking category, unclear category weight distribution, orphaned items
+- `references/common-issues.md` — LTI grade sync, the hidden "Not Graded" parking category, unclear category weight distribution, orphaned items, who changed a setting (reading the course log)
 - `references/excel-calculator-spec.md` — Column structure, formulas, styling, hover comments
 - `references/best-practices.md` — The 6-point list (same content as the bundled PDF)
 - `references/email-template.md` — The handoff email

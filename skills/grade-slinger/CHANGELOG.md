@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.5 — 2026-09-09
+
+- **Added** a "Who Changed a Setting (and why the log will lie to you)" section to
+  `references/common-issues.md`, for the case where a gradebook setting is not what a previous
+  review left it as. Two traps are documented because both produced a confident wrong answer in
+  practice. First, the course log report's **Teaching** event-level filter returns no
+  `Grade item updated` events whatsoever (grade item and category edits log at a different level),
+  so filtering to Teaching shows a clean log and invites the conclusion that nobody touched the
+  gradebook. All events (`edulevel=-1`) is the only safe setting, and a zero-result check should be
+  blamed on the filter before it is blamed on the history. Second, the log records **that** a
+  category was re-saved and never **which field** changed, so it can place who and when but cannot
+  support "they turned this setting back on". The section also carries a URL recipe for reading the
+  log without drowning in automatic grading events, and guidance to raise a third party's edits with
+  the instructor as a question rather than a finding, since re-applying a fix into a gradebook
+  someone else is actively working in just gets it flipped back.
+- **Changed** SKILL.md Step 3: a setting that disagrees with a previous review now routes through
+  that section before any conclusion is drawn from the log.
+
 ## 1.4 — 2026-09-02
 
 - **Added** a "Not Graded Parking Category" section to `references/common-issues.md`. Instructors

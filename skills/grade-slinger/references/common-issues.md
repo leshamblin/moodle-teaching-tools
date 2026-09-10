@@ -87,3 +87,55 @@ If the Moodle MCP is connected, call `mcp__moodle__moodle_get_grade_items` and c
 ## Two Types of "Hidden"
 
 See `no-surprises-settings.md` — this is the most common source of confusion. When something seems "wrong" with a student's view, check whether the activity itself is hidden at the course level (not just the gradebook item).
+
+## Who Changed a Setting (and why the log will lie to you)
+
+When a gradebook setting isn't what a previous report said it was, the course log report answers who
+and when: `/report/log/index.php?id=<courseid>`. Two traps make it easy to get a confident wrong
+answer.
+
+### The "Teaching" filter hides every grade edit
+
+Filtering the event level to **Teaching** returns grader-report views, grading activity, and course
+module updates, but **no** `Grade item updated` events at all. Grade item and grade category edits
+are logged at a different event level. Filtered to Teaching, the log looks clean and the obvious
+conclusion is that nobody touched the gradebook, which is simply wrong.
+
+Always use **All events** (`edulevel=-1`). If a check comes back showing zero grade edits, assume
+the filter before you assume the history.
+
+### The log records that a category changed, never which field
+
+A category edit reads:
+
+> updated a grade item with id 'N' of type 'category' and name '\<Category\> (X available)'
+
+That's who and when, and nothing else. It cannot show that someone unticked "Exclude empty grades"
+specifically, or changed a weight, or renamed something. Report it as *"the category was re-saved at
+this time"*, never as *"they turned this setting back on"*. The second is an accusation the log
+does not support.
+
+### Reading it without drowning
+
+Build the URL directly instead of clicking through the filter form:
+
+```
+/report/log/index.php?chooselog=1&id=<courseid>&user=<userid>&date=0
+  &modid=&modaction=&edulevel=-1&logreader=logstore_standard&perpage=500
+```
+
+- **Filter by `user`.** Automatic grading events fill every unfiltered page in an active course.
+- **Raise `perpage`** (500-2000) so one page spans the window you need, then read the oldest row's
+  timestamp to confirm it actually reaches back far enough. This is easy to get wrong.
+- **Extract rows with a script**, not by reading the rendered page. The participant dropdown alone
+  is every enrolled student's name.
+- A category's grade item is `of type 'category'`; an activity's is `of type 'mod'`.
+- Group the hits by timestamp. Several categories sharing one timestamp is a single save of the
+  Gradebook setup page; separate timestamps are individual category edits.
+
+### What to do with the answer
+
+If someone else has been editing the gradebook, raise it with the instructor as a **question, not a
+finding**. They may well have changed it on purpose, and it is their course. Re-applying a fix into
+a gradebook that someone else is actively working in only gets it flipped back a second time.
+Confirm intent before changing it again, and say plainly what the consequence of leaving it will be.
