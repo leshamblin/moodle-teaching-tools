@@ -17,11 +17,11 @@ Grade Slinger asks where to put course folders the first time you run it and def
 ## Prerequisite: the Moodle MCP server
 
 `moodle-student-risk` and `moodle-link-checkup` read Moodle through the **Moodle MCP server**, so set
-that up first. **Grade Slinger does not need it** — it works from the syllabus and a gradebook-setup
+that up first. **Grade Slinger does not need it:** it works from the syllabus and a gradebook-setup
 PDF you export yourself, and only uses the MCP to spot-check live gradebook state if it happens to be
 connected.
 
-Installing the server is a separate, one-time step. Follow the **"Install the Moodle MCP in Claude Code"** guide, or see the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
+Installing the server is a separate, one-time step. Follow the [Claude Code Setup Guide](https://github.com/leshamblin/MoodleMCP/blob/main/Claude_Code_Setup_Guide.md) in the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
 
 ## Install the plugin
 
