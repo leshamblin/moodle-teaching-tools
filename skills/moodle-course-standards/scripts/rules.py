@@ -238,3 +238,88 @@ OUT_OF_REACH = {
 
 def rule_out_of_reach(row: int) -> Result:
     return Result(row, NA, OUT_OF_REACH[row])
+
+
+# ---------------------------------------------------------------- Section 3
+
+
+def load_syllabus_keywords() -> Dict:
+    with open(os.path.join(_REFS, 'syllabus-keywords.json')) as fh:
+        return json.load(fh)['keywords']
+
+
+def rule_syllabus(text: str, status: str, row: str,
+                  keywords: Optional[Dict] = None) -> Result:
+    """Presence check for one required syllabus element.
+
+    If the syllabus could not be read, this is UNKNOWN. Returning NO here would
+    mean a course with a scanned PDF outranks a course that genuinely has no
+    accessibility statement, which inverts the whole point of the audit.
+    """
+    keywords = keywords or load_syllabus_keywords()
+    spec = keywords[str(row)]
+    if status != 'ok':
+        return Result(int(row), UNKNOWN, 'syllabus not readable: %s' % status)
+    low = text.lower()
+    for kw in spec['any']:
+        if kw.lower() in low:
+            return Result(int(row), YES, 'syllabus contains %r' % kw)
+    return Result(int(row), NO,
+                  'syllabus has none of: %s' % ', '.join(spec['any'][:4]))
+
+
+# ---------------------------------------------------------------- Registry
+
+PRESENCE_ROWS = ['17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27']
+SYLLABUS_ROWS = ['31', '32', '33', '34', '35', '36', '37', '38',
+                 '39', '40', '41', '42', '43', '44']
+
+# (row, label, kind). kind selects how score_course calls it.
+RULES = (
+    [(8, 'Course Banner', 'bundle'),
+     (9, 'Course Format', 'bundle'),
+     (10, 'Course Structure', 'bundle'),
+     (11, 'Time Frame for Modules', 'bundle'),
+     (12, 'Course Links', 'links'),
+     (16, 'Course name, number and section', 'bundle')]
+    + [(int(r), load_presence_patterns()[r]['label'], 'presence') for r in PRESENCE_ROWS]
+    + [(28, 'Welcome Forum/Announcement', 'bundle')]
+    + [(int(r), load_syllabus_keywords()[r]['label'], 'syllabus') for r in SYLLABUS_ROWS]
+    + [(49, 'Length of asynchronous video lectures', 'na'),
+       (50, 'Audio/video quality', 'na'),
+       (52, 'Captions and transcripts', 'na'),
+       (53, 'Lecture slide PDFs/PowerPoints included', 'bundle'),
+       (55, 'Expectations and instructions are clear', 'na'),
+       (56, 'Instructions and/or rubrics for assessments', 'bundle')]
+)
+
+_BUNDLE_RULES = {
+    8: rule_course_banner,
+    9: rule_course_format,
+    10: rule_course_structure,
+    11: rule_time_frame,
+    16: rule_course_name_section,
+    28: rule_welcome_forum,
+    53: rule_slides_present,
+    56: rule_assessment_instructions,
+}
+
+
+def score_course(bundle: Dict, syllabus_text: str, syllabus_status: str,
+                 link_results: Dict[str, str]) -> List[Result]:
+    """Run all 38 rows against one course and return results in row order."""
+    patterns = load_presence_patterns()
+    keywords = load_syllabus_keywords()
+    out = []  # type: List[Result]
+    for row, _label, kind in RULES:
+        if kind == 'bundle':
+            out.append(_BUNDLE_RULES[row](bundle))
+        elif kind == 'links':
+            out.append(rule_course_links(bundle, link_results))
+        elif kind == 'presence':
+            out.append(rule_presence(bundle, str(row), patterns))
+        elif kind == 'syllabus':
+            out.append(rule_syllabus(syllabus_text, syllabus_status, str(row), keywords))
+        elif kind == 'na':
+            out.append(rule_out_of_reach(row))
+    return sorted(out, key=lambda r: r.row)
