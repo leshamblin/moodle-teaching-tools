@@ -1,0 +1,16 @@
+{
+  "comment": "Row number to search pattern for the shared Section 2 presence rules. Patterns are case insensitive regexes matched against module names, label descriptions and section summaries in the intro section (section 0) and any section whose name matches 'start here', 'about', 'administration' or 'welcome'.",
+  "patterns": {
+    "17": {"label": "Course Syllabus Document", "pattern": "syllab"},
+    "18": {"label": "Course Outline/Schedule Document", "pattern": "outline|schedule|calendar|course at a glance"},
+    "19": {"label": "Course overview/introduction", "pattern": "overview|introduction to the course|course intro"},
+    "20": {"label": "Instructor/TA welcome video, audio or message", "pattern": "welcome|meet your instructor|meet the professor"},
+    "21": {"label": "Instructor/TA bio with contact information", "pattern": "instructor|professor|faculty|bio|contact|office hour"},
+    "22": {"label": "Course Navigation", "pattern": "navigat|getting started|how to use|how this course"},
+    "23": {"label": "Communication Guidelines", "pattern": "communicat|netiquette|discussion guideline|email polic"},
+    "24": {"label": "Course Technology", "pattern": "technolog|system requirement|software|hardware|minimum requirement"},
+    "25": {"label": "Student Office hours information", "pattern": "office hour|student hour|drop.?in"},
+    "26": {"label": "Link to Academic Support", "pattern": "academic support|tutor|writing center|library|dasa|counsel"},
+    "27": {"label": "Course and Tech support", "pattern": "tech support|help ?desk|moodle support|wolftech|it support|ncsu support"}
+  }
+}
