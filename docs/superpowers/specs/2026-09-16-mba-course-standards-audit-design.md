@@ -146,8 +146,8 @@ Six components. Each does one thing and can be tested alone.
 of course IDs. Output is a manifest the rest of the run works from.
 
 **Fetcher.** Per course: `core_course_get_contents`, `core_course_get_courses_by_field`
-for format, image and summary, and `mod_forum_get_forum_discussions` for the
-welcome forum rule. Raw JSON is cached to disk keyed by course ID.
+for format, image and summary, and `mod_forum_get_forums_by_courses` for the
+welcome forum rule, which carries a discussion count in one call. Raw JSON is cached to disk keyed by course ID.
 
 **Extractor.** Downloads syllabus and outline files and pulls text from PDF, DOCX
 and PPTX. Extracted text is cached alongside the JSON.
