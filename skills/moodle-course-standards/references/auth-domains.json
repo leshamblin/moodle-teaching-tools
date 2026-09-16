@@ -1,0 +1,16 @@
+{
+  "comment": "Domains that return 401/403 to an anonymous checker because they want a login. A code from these is not evidence of a broken link.",
+  "domains": [
+    "panopto.com",
+    "mheducation.com",
+    "docs.google.com",
+    "drive.google.com",
+    "forms.gle",
+    "wolfware.ncsu.edu",
+    "moodle-courses2527.wolfware.ncsu.edu",
+    "linkedin.com",
+    "hbsp.harvard.edu",
+    "wsj.com",
+    "nytimes.com"
+  ]
+}
