@@ -39,16 +39,33 @@ and B55:B56.
 
 ### Defects in the supplied form
 
-These are in the source file and should be fixed there rather than worked around
-here. The rule table is keyed on row number, so any fix changes the mapping.
+**Fixed 2026-09-17.** The corrected file is
+`templates/Course-Review-Checklist.xlsx` in this skill, and
+`Course Review Checklist for Online Courses (revised).xlsx` in Downloads. The
+original is untouched.
 
-- Five validated cells have no item text beside them: rows 13, 15, 46, 47, 51.
-- Row 14 is a section header that was given a dropdown by mistake.
-- Three different sections are all numbered "Section 3".
-- Rows 55 and 56 are assessment items sitting under the Multimedia header.
-- Row 26 refers students to "ISU", and row 44 says "Since Canvas is the main
-  platform for course delivery". The form was adapted from another institution's
-  Canvas checklist and not fully cleaned up.
+Every fix held row positions exactly where they were, because the rule table is
+keyed on row number and because a colleague was already hand scoring two courses
+on workbooks built from the original layout. Deleting the blank rows would have
+shifted everything below them and invalidated her work in flight.
+
+What was wrong and what was done:
+
+- Six validated cells had no item to score: rows 13, 15, 46, 47 and 51 were blank,
+  and row 14 was a section header that had been given a dropdown by mistake. The
+  validation range is now `B8:B12 B16:B28 B31:B44 B49:B50 B52:B53 B55:B56`, which
+  is exactly the 38 real items.
+- Two sections were both numbered "Section 3". Multimedia at row 48 is now
+  Section 4. (An earlier note in this spec said three sections collided. That was
+  wrong; it was two.)
+- Row 54 "Assesments" is now "Assessments". It stays an unnumbered sub block
+  under Multimedia, which is how the original intended it.
+- Row 26 pointed students at "ISU" and row 44 said "Since Canvas is the main
+  platform for course delivery". Both now say NC State and Moodle. The form had
+  been adapted from another institution's Canvas checklist.
+- Spelling in the item names: Guideliness, Technoology, Annocumement,
+  assignements, Harrasment. Also RECOMMED for RECOMMEND in four comment cells and
+  "office hourse" in one.
 
 Net of the blanks and the stray header, there are **38 real items**.
 
@@ -237,6 +254,6 @@ result before it reports any new one.
    2025 exposed 39. Either the term's courses are not built yet or they are
    hidden and the API skips them. This does not block the Spring 2026 run, but it
    has to be answered before the tool is pointed at a current term.
-2. Who receives the output, and are courses named or anonymized in what goes out.
-   This changes nothing in the build but changes how the Ranking sheet should be
-   labeled.
+2. ~~Are courses named or anonymized in what goes out.~~ **Resolved 2026-09-17:
+   courses are named.** The Ranking sheet keeps the course shortname and the
+   instructor, and no anonymisation layer is needed.
