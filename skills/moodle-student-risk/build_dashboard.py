@@ -75,6 +75,24 @@ def compute_tier(flags: List[str], sig: StudentSignals, ctx: CourseContext) -> s
     return "green"
 
 
+def count_missing(items: list, due_by_assign: dict, now_ts: int) -> int:
+    """Past-due assignments the student has not done: no grade and no submission,
+    or graded zero. Submitted-but-ungraded is the instructor's backlog, not missing.
+    items are gradereport_user_get_grade_items entries; due_by_assign maps
+    assignment id (the grade item's iteminstance) to its due timestamp."""
+    missing = 0
+    for it in items:
+        if it.get("itemmodule") != "assign":
+            continue
+        due = due_by_assign.get(it.get("iteminstance")) or 0
+        if not due or due >= now_ts:
+            continue
+        raw = it.get("graderaw")
+        if raw == 0 or (raw is None and not it.get("gradedatesubmitted")):
+            missing += 1
+    return missing
+
+
 # ---------------------------------------------------------------------------
 # Task 3: Moodle REST client — token loading + HTTP client
 # ---------------------------------------------------------------------------
@@ -126,20 +144,23 @@ class MoodleClient:
         with urlopen(req, timeout=30) as r:
             return json.loads(r.read().decode())
 
-    def get_grade_report(self, course_id: int, user_id: int, now_ts: int):
+    def get_grade_report(self, course_id: int, user_id: int, now_ts: int, due_by_assign: dict):
         data = self._call("gradereport_user_get_grade_items", courseid=course_id, userid=user_id)
         items = data.get("usergrades", [{}])[0].get("gradeitems", [])
         grade_pct = None
-        missing = 0
         for it in items:
             if it.get("itemtype") == "course":
                 if it.get("graderaw") is not None and it.get("grademax"):
                     grade_pct = round(100.0 * it["graderaw"] / it["grademax"], 1)
-            elif it.get("itemmodule") == "assign":
-                duedate = it.get("duedate") or 0
-                if duedate and duedate < now_ts and it.get("graderaw") is None:
-                    missing += 1
-        return {"grade_pct": grade_pct, "missing_assignments": missing}
+        return {"grade_pct": grade_pct,
+                "missing_assignments": count_missing(items, due_by_assign, now_ts)}
+
+    def get_assign_due_dates(self, course_id: int) -> dict:
+        """Assignment id -> due timestamp (0 if none). Grade items don't carry due dates."""
+        data = self._call("mod_assign_get_assignments",
+                          **{"courseids[0]": course_id, "includenotenrolledcourses": 1})
+        courses = data.get("courses", [])
+        return {a["id"]: a.get("duedate") or 0 for c in courses for a in c.get("assignments", [])}
 
     def get_completion_pct(self, course_id: int, user_id: int):
         data = self._call("core_completion_get_activities_completion_status",
@@ -167,13 +188,13 @@ import time
 
 
 def fetch_all_students(client: MoodleClient, course_id: int, students: list, now_ts: int,
-                       has_completion_tracking: bool, max_workers: int = 8):
+                       has_completion_tracking: bool, due_by_assign: dict, max_workers: int = 8):
     """students: list of dicts with at minimum {id, fullname, email, lastcourseaccess}.
     Returns list of dicts: per-student record ready for risk scoring."""
     def one(stu):
         uid = stu["id"]
         try:
-            grade = client.get_grade_report(course_id, uid, now_ts)
+            grade = client.get_grade_report(course_id, uid, now_ts, due_by_assign)
             completion_pct = client.get_completion_pct(course_id, uid) if has_completion_tracking else None
             return {
                 "id": uid,
@@ -337,7 +358,9 @@ def process_course(course_id: int, out_dir: str = None) -> dict:
     except Exception:
         ctx.has_graded_forums = False
 
-    records = fetch_all_students(client, course_id, students, now_ts, ctx.has_completion_tracking)
+    due_by_assign = client.get_assign_due_dates(course_id)
+    records = fetch_all_students(client, course_id, students, now_ts, ctx.has_completion_tracking,
+                                 due_by_assign)
 
     ctx.cohort_completion_median = compute_cohort_median_completion(records)
 

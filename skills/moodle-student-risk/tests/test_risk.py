@@ -129,22 +129,37 @@ def test_load_token_strips_quotes(tmp_path):
 
 
 def test_grade_report_extracts_total_and_missing(monkeypatch):
+    # Real gradereport_user_get_grade_items entries have no duedate key; the old
+    # fixture invented one, which is how the missing-work bug passed this test.
     fake_response = {
         "usergrades": [{
             "courseid": 9201,
             "userid": 554,
             "gradeitems": [
-                {"itemtype": "course", "graderaw": 82.5, "grademax": 100.0, "itemname": None, "duedate": 0},
-                {"itemtype": "mod", "itemmodule": "assign", "itemname": "A1", "graderaw": 90.0, "grademax": 100.0, "duedate": 1781495940},
-                {"itemtype": "mod", "itemmodule": "assign", "itemname": "A2", "graderaw": None, "grademax": 100.0, "duedate": 1700000000},  # past due, no grade
+                {"itemtype": "course", "graderaw": 82.5, "grademax": 100.0, "itemname": None},
+                {"itemtype": "mod", "itemmodule": "assign", "iteminstance": 11, "itemname": "A1",
+                 "graderaw": 90.0, "grademax": 100.0, "gradedatesubmitted": 1779000000},
+                {"itemtype": "mod", "itemmodule": "assign", "iteminstance": 12, "itemname": "A2",
+                 "graderaw": None, "grademax": 100.0, "gradedatesubmitted": None},  # past due, not submitted
             ]
         }]
     }
     client = MoodleClient(token="t", base_url="https://x")
     monkeypatch.setattr(client, "_call", lambda fn, **p: fake_response)
-    result = client.get_grade_report(course_id=9201, user_id=554, now_ts=1780000000)
+    result = client.get_grade_report(course_id=9201, user_id=554, now_ts=1780000000,
+                                     due_by_assign={11: 1781495940, 12: 1700000000})
     assert result["grade_pct"] == 82.5
     assert result["missing_assignments"] == 1
+
+
+def test_assign_due_dates_keyed_by_assignment_id(monkeypatch):
+    fake = {"courses": [{"id": 9201, "assignments": [
+        {"id": 11, "cmid": 501, "duedate": 1781495940},
+        {"id": 12, "cmid": 502, "duedate": 0},
+    ]}]}
+    client = MoodleClient(token="t", base_url="https://x")
+    monkeypatch.setattr(client, "_call", lambda fn, **p: fake)
+    assert client.get_assign_due_dates(9201) == {11: 1781495940, 12: 0}
 
 
 def test_completion_pct_computed_from_statuses(monkeypatch):
@@ -170,3 +185,47 @@ def test_count_graded_forums_counts_only_assessed_above_zero(monkeypatch):
     client = MoodleClient(token="t", base_url="https://x")
     monkeypatch.setattr(client, "_call", lambda fn, **p: fake_forums)
     assert client.count_graded_forums(course_id=9201) == 2
+
+
+# ---------------------------------------------------------------------------
+# count_missing: past-due assignments with no submission (or graded zero).
+# Due dates come from mod_assign_get_assignments keyed by assignment id, because
+# gradereport_user_get_grade_items never carries a duedate field.
+# ---------------------------------------------------------------------------
+from build_dashboard import count_missing
+
+NOW = 1_800_000_000
+PAST, FUTURE = NOW - 86400, NOW + 86400
+
+
+def assign_item(instance, graderaw=None, submitted=False):
+    # Shape of a real gradereport_user_get_grade_items entry (no duedate key).
+    return {"itemtype": "mod", "itemmodule": "assign", "iteminstance": instance,
+            "graderaw": graderaw, "grademax": 35, "gradedatesubmitted": 1_799_000_000 if submitted else None}
+
+
+def test_count_missing_counts_past_due_unsubmitted_assignment():
+    assert count_missing([assign_item(1)], {1: PAST}, NOW) == 1
+
+
+def test_count_missing_ignores_assignment_not_yet_due():
+    assert count_missing([assign_item(1)], {1: FUTURE}, NOW) == 0
+
+
+def test_count_missing_ignores_submitted_but_ungraded():
+    # Waiting on the instructor to grade it is not the student's missing work.
+    assert count_missing([assign_item(1, submitted=True)], {1: PAST}, NOW) == 0
+
+
+def test_count_missing_counts_past_due_zero():
+    # Courses that enter zeros for missed work should still flag it.
+    assert count_missing([assign_item(1, graderaw=0)], {1: PAST}, NOW) == 1
+
+
+def test_count_missing_ignores_graded_assignment():
+    assert count_missing([assign_item(1, graderaw=30)], {1: PAST}, NOW) == 0
+
+
+def test_count_missing_ignores_assignment_without_due_date():
+    assert count_missing([assign_item(1)], {1: 0}, NOW) == 0
+    assert count_missing([assign_item(1)], {}, NOW) == 0

@@ -31,7 +31,7 @@ Four signals; each that fires adds a flag. Tier is a function of flag count.
 | Signal | Threshold |
 |---|---|
 | Stale access | No login in 7d (4d in first 14d of term) |
-| Missing work | ≥ 1 past-due assignment with no submission |
+| Missing work | ≥ 1 past-due assignment with no submission, or graded 0 (submitted-but-ungraded does not count) |
 | Low grade | Course total < 70% (skipped if no graded items yet) |
 | Low engagement | Completion < 50% of cohort median OR zero posts in graded forums in last 14d |
 
