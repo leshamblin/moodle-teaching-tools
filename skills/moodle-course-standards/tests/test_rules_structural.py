@@ -28,10 +28,23 @@ def test_row8_banner_missing_is_no():
     assert r.verdict == rules.NO
 
 
-def test_row8_banner_present_is_yes():
+def test_row8_image_at_top_of_page_is_yes():
+    b = bundle()
+    b['contents'][0]['summary'] = '<p><img src="banner.png" alt="MBA 520"></p>'
+    assert rules.rule_course_banner(b).verdict == rules.YES
+
+
+def test_row8_card_image_only_is_somewhat():
     b = bundle()
     b['course']['courseimage'] = 'https://m.edu/pluginfile.php/1/course/overviewfiles/x.png'
-    assert rules.rule_course_banner(b).verdict == rules.YES
+    assert rules.rule_course_banner(b).verdict == rules.SOMEWHAT
+
+
+def test_row8_generated_placeholder_is_not_an_image():
+    """Moodle fills courseimage with a generated SVG when none is uploaded."""
+    b = bundle()
+    b['course']['courseimage'] = 'https://m.edu/pluginfile.php/1/course/generated/course.svg'
+    assert rules.rule_course_banner(b).verdict == rules.NO
 
 
 def test_row9_default_section_names_is_no():
@@ -86,8 +99,28 @@ def test_row12_auth_links_do_not_count_against_checkable_ones():
     assert r.verdict == rules.YES
 
 
-def test_row16_section_in_name_is_yes():
-    assert rules.rule_course_name_section(bundle()).verdict == rules.YES
+def test_row16_number_and_section_on_page_is_yes():
+    b = bundle()
+    b['contents'][0]['summary'] = 'Welcome to MBA 520, section 631'
+    assert rules.rule_course_name_section(b).verdict == rules.YES
+
+
+def test_row16_number_only_on_page_is_somewhat():
+    b = bundle()
+    b['contents'][0]['modules'] = [{'modname': 'url', 'name': 'MBA 520 -- All Sections -- Office Hours'}]
+    assert rules.rule_course_name_section(b).verdict == rules.SOMEWHAT
+
+
+def test_row16_old_prefix_on_page_still_counts():
+    """MKT 510 in Fall 2026 still calls itself MBA 510 in its content."""
+    b = bundle()
+    b['course']['fullname'] = 'MKT 510 (631) Fall 2026 Marketing Management'
+    b['contents'][0]['summary'] = 'MBA 510 (631) course information'
+    assert rules.rule_course_name_section(b).verdict == rules.YES
+
+
+def test_row16_moodle_course_name_alone_is_no():
+    assert rules.rule_course_name_section(bundle()).verdict == rules.NO
 
 
 def test_row16_no_section_is_no():
@@ -104,6 +137,15 @@ def test_presence_rule_finds_module_in_intro_section():
     assert rules.rule_presence(b, '17').verdict == rules.YES
 
 
+def test_presence_rule_looks_in_getting_started_section():
+    """MKT 510 Fall 2026 keeps its syllabus link in section 1, 'Getting Started'."""
+    b = bundle()
+    b['contents'].insert(1, {'section': 1, 'name': 'Getting Started', 'summary': '',
+                             'modules': [{'modname': 'url',
+                                          'name': 'READ: Course Syllabus MBA 510 FALL 2026'}]})
+    assert rules.rule_presence(b, '17').verdict == rules.YES
+
+
 def test_presence_rule_missing_is_no():
     assert rules.rule_presence(bundle(), '17').verdict == rules.NO
 
@@ -114,10 +156,27 @@ def test_row28_forum_with_no_discussions_is_no():
     assert rules.rule_welcome_forum(b).verdict == rules.NO
 
 
-def test_row28_forum_with_a_discussion_is_yes():
+def test_row28_welcome_post_and_intro_forum_is_yes():
+    b = bundle()
+    b['forums'] = [{'id': 5, 'name': 'Announcements', 'numdiscussions': 2},
+                   {'id': 6, 'name': 'Introduce Yourself!', 'numdiscussions': 40}]
+    b['discussions'] = {'5': ['Grades in Moodle', 'Welcome to MBA 507'], '6': ['Intro']}
+    assert rules.rule_welcome_forum(b).verdict == rules.YES
+
+
+def test_row28_weekly_announcements_without_welcome_is_somewhat_with_intro_forum():
+    b = bundle()
+    b['forums'] = [{'id': 5, 'name': 'Announcements', 'numdiscussions': 13},
+                   {'id': 6, 'name': 'Introduce Yourself!', 'numdiscussions': 40}]
+    b['discussions'] = {'5': ['MBA 520, Week 9', 'Farewell to MBA 520!'], '6': ['Intro']}
+    assert rules.rule_welcome_forum(b).verdict == rules.SOMEWHAT
+
+
+def test_row28_posts_but_no_welcome_and_no_intro_forum_is_no():
     b = bundle()
     b['forums'] = [{'id': 5, 'name': 'Announcements', 'numdiscussions': 3}]
-    assert rules.rule_welcome_forum(b).verdict == rules.YES
+    b['discussions'] = {'5': ['Exam grades posted']}
+    assert rules.rule_welcome_forum(b).verdict == rules.NO
 
 
 def test_row28_no_forum_data_is_unknown_not_no():
@@ -196,3 +255,62 @@ def test_row56_no_description_key_anywhere_is_unknown_not_no():
         {'modname': 'quiz', 'name': 'Q1'},
     ]
     assert rules.rule_assessment_instructions(b).verdict == rules.UNKNOWN
+
+
+def test_row9_some_default_names_is_somewhat():
+    b = bundle()
+    b['contents'].append({'section': 2, 'name': 'Week 2', 'summary': '', 'modules': []})
+    assert rules.rule_course_format(b).verdict == rules.SOMEWHAT
+
+
+def test_row11_exam_sections_need_no_dates():
+    b = bundle()
+    b['contents'].append({'section': 2, 'name': 'Final Exam', 'summary': '', 'modules': []})
+    assert rules.rule_time_frame(b).verdict == rules.YES
+
+
+def test_hidden_sections_are_ignored():
+    b = bundle()
+    b['contents'].append({'section': 2, 'name': 'Old Videos', 'summary': '', 'visible': 0,
+                          'modules': []})
+    assert rules.rule_time_frame(b).verdict == rules.YES
+
+
+def test_row53_slides_inside_a_folder_count():
+    b = bundle()
+    b['contents'][1]['modules'] = [{'modname': 'folder', 'name': 'Lecture Slides and Data',
+                                    'contents': [{'filename': 'W1 Regression.pptx',
+                                                  'mimetype': 'application/vnd.openxmlformats-'
+                                                              'officedocument.presentationml.presentation'}]}]
+    assert rules.rule_slides_present(b).verdict == rules.YES
+
+
+def test_presence_only_in_syllabus_is_somewhat():
+    r = rules.rule_presence(bundle(), '23', syllabus_text='Email me; I reply within a day.',
+                            syllabus_status='ok')
+    assert r.verdict == rules.SOMEWHAT
+
+
+def test_presence_missing_and_syllabus_unreadable_is_unknown():
+    r = rules.rule_presence(bundle(), '23', syllabus_text='', syllabus_status='pdf has no text layer')
+    assert r.verdict == rules.UNKNOWN
+
+
+def test_presence_schedule_inside_syllabus_label_is_not_a_separate_schedule():
+    b = bundle()
+    b['contents'][0]['modules'] = [{'modname': 'label', 'name': 'Syllabus with Schedule'}]
+    r = rules.rule_presence(b, '18', syllabus_text='Week 1 schedule', syllabus_status='ok')
+    assert r.verdict == rules.SOMEWHAT
+
+
+def test_row26_tutorial_is_not_tutoring():
+    b = bundle()
+    b['contents'][0]['modules'] = [{'modname': 'url', 'name': 'JMP tutorial videos'}]
+    assert rules.rule_presence(b, '26', syllabus_status='ok').verdict == rules.NO
+
+
+def test_row22_navigation_phrase_in_a_description_does_not_count():
+    b = bundle()
+    b['contents'][0]['modules'] = [{'modname': 'url', 'name': 'JMP introductory videos',
+                                    'description': 'the first column is helpful for getting started'}]
+    assert rules.rule_presence(b, '22', syllabus_status='ok').verdict == rules.NO

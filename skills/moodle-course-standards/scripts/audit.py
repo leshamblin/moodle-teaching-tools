@@ -1,11 +1,18 @@
 """CLI for the MBA online course standards audit.
 
 Read only. Run:
-    python3 audit.py --term "Spring 2026" --sections '^6\\d\\d$' --out ~/Desktop/audit.xlsx
+    python3 audit.py --term "Fall 2026" --out ~/Desktop/MBA-standards-Fall-2026.xlsx
+
+Spring 2026 was selected by searching for "MBA" in course names. From Fall 2026
+the MBA courses carry departmental prefixes (MKT 510, ITAO 540), so the default
+now lists the college's category and keeps 500 level courses in the 63x online
+MBA sections. Reproduce the Spring 2026 set with:
+    python3 audit.py --term "Spring 2026" --search MBA --sections '^6\\d\\d$' --numbers ''
 """
 from __future__ import annotations
 
 import argparse
+import html
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
@@ -49,9 +56,11 @@ def check_all_links(urls: List[str], auth_domains: List[str], workers: int = 8) 
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description='Audit online courses against the review checklist')
-    ap.add_argument('--term', default='Spring 2026')
-    ap.add_argument('--sections', default=r'^6\d\d$', help='regex matched against section numbers')
-    ap.add_argument('--search', default='MBA', help='course search string')
+    ap.add_argument('--term', default='Fall 2026')
+    ap.add_argument('--sections', default=r'^63\d$', help='regex matched against section numbers')
+    ap.add_argument('--numbers', default=r'^5', help='regex matched against the course number')
+    ap.add_argument('--category', default='8', help='Moodle category id to list (8 is COM)')
+    ap.add_argument('--search', default='', help='course name search, used instead of --category')
     ap.add_argument('--course-ids', default='', help='comma separated ids, overrides term and sections')
     ap.add_argument('--cache', default=DEFAULT_CACHE)
     ap.add_argument('--refresh', action='store_true', help='ignore the cache and refetch')
@@ -67,11 +76,17 @@ def main(argv=None) -> int:
     if args.course_ids:
         ids = [int(x) for x in args.course_ids.split(',') if x.strip()]
         courses = [{'id': i, 'shortname': str(i), 'fullname': str(i), 'sections': []} for i in ids]
-    else:
+    elif args.search:
         found = fetch.moodle_call(base, token, 'core_course_search_courses',
                                   criterianame='search', criteriavalue=args.search,
                                   page=0, perpage=500)
-        courses = selector.select_courses(found.get('courses', []), args.term, args.sections)
+        courses = selector.select_courses(found.get('courses', []), args.term,
+                                          args.sections, args.numbers)
+    else:
+        found = fetch.moodle_call(base, token, 'core_course_get_courses_by_field',
+                                  field='category', value=args.category)
+        courses = selector.select_courses(found.get('courses', []), args.term,
+                                          args.sections, args.numbers)
 
     print('%d courses selected' % len(courses))
     rows = []
@@ -83,9 +98,11 @@ def main(argv=None) -> int:
             course['shortname'] = meta.get('shortname') or course['shortname']
             course['fullname'] = meta.get('fullname') or course['fullname']
             course['sections'] = selector.parse_sections(course['fullname'])
+        course['shortname'] = html.unescape(course['shortname'])
+        course['fullname'] = html.unescape(course['fullname'])
         course.setdefault('instructor', ', '.join(
             c.get('fullname', '') for c in (meta.get('contacts') or [])))
-        text, status = extract.syllabus_text(bundle, base, token, args.cache)
+        text, status = extract.syllabus_text(bundle, base, token, args.cache, args.refresh)
         links = {} if args.skip_links else check_all_links(collect_links(bundle), auth_domains)
         results = rules.score_course(bundle, text, status, links)
         rows.append({'course': course, 'results': results})
@@ -96,7 +113,7 @@ def main(argv=None) -> int:
     if args.forms:
         import forms
         out_dir = os.path.join(os.path.dirname(args.out), 'forms')
-        n = forms.write_all(rows, out_dir)
+        n = forms.write_all(rows, out_dir, args.term)
         print('wrote %d filled checklists to %s' % (n, out_dir))
     return 0
 

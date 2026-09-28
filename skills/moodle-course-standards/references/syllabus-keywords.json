@@ -1,19 +1,162 @@
 {
-  "comment": "Row number to the keyword set that shows an element is present in the syllabus text. A row scores Yes if ANY keyword matches. These detect presence, never quality.",
+  "comment": "Row number to the keyword set that shows an element is present in the syllabus text. A row scores Yes if ANY keyword matches, and Somewhat if only a 'partial' keyword does. A match right after no, not, without or optional, or right before (optional), does not count. These detect presence, never quality.",
   "keywords": {
-    "31": {"label": "Instructor information", "any": ["instructor", "professor", "taught by", "faculty"]},
-    "32": {"label": "Office information", "any": ["office location", "office:", "nelson hall", "office hours", "by appointment"]},
-    "33": {"label": "Tech Support information", "any": ["tech support", "help desk", "helpdesk", "wolftech", "it support", "919-515-help"]},
-    "34": {"label": "Course catalog description", "any": ["catalog description", "course description"]},
-    "35": {"label": "Learning objectives/Outcomes", "any": ["learning objective", "learning outcome", "course objective", "upon completion", "students will be able to"]},
-    "36": {"label": "Course format", "any": ["asynchronous", "synchronous", "online", "distance education", "fully online", "hybrid"]},
-    "37": {"label": "Required materials", "any": ["required text", "required material", "textbook", "isbn", "required reading"]},
-    "38": {"label": "Required technology", "any": ["required technology", "technology requirement", "computer requirement", "webcam", "reliable internet", "software"]},
-    "39": {"label": "Library information", "any": ["library", "lib.ncsu.edu", "hunt library", "dh hill"]},
-    "40": {"label": "Learning Activities and Assessments", "any": ["assignment", "assessment", "graded", "exam", "quiz", "project"]},
-    "41": {"label": "Course grading policies", "any": ["late work", "late assignment", "late polic", "make-up", "makeup", "academic integrity", "plagiaris", "extra credit"]},
-    "42": {"label": "Virtual Class Meetings", "any": ["zoom", "virtual class", "live session", "webex", "class meeting", "synchronous session"]},
-    "43": {"label": "University Policies", "any": ["accessibility", "disability resource", "dro@ncsu", "non-discrimination", "nondiscrimination", "harassment", "equal opportunity"]},
-    "44": {"label": "Moodle Support for Students", "any": ["moodle support", "moodle help", "wolfware", "learning technology"]}
+    "31": {
+      "label": "Instructor information",
+      "any": [
+        "instructor",
+        "professor",
+        "taught by",
+        "faculty"
+      ]
+    },
+    "32": {
+      "label": "Office information",
+      "any": [
+        "office location",
+        "office:",
+        "nelson hall",
+        "office hours",
+        "by appointment"
+      ]
+    },
+    "33": {
+      "label": "Tech Support information",
+      "any": [
+        "tech support",
+        "help desk",
+        "helpdesk",
+        "wolftech",
+        "it support",
+        "919-515-help"
+      ]
+    },
+    "34": {
+      "label": "Course catalog description",
+      "any": [
+        "catalog description",
+        "course description"
+      ]
+    },
+    "35": {
+      "label": "Learning objectives/Outcomes",
+      "any": [
+        "learning objective",
+        "learning outcome",
+        "course objective",
+        "upon completion",
+        "students will be able to"
+      ]
+    },
+    "36": {
+      "label": "Course format",
+      "any": [
+        "asynchronous",
+        "synchronous",
+        "online",
+        "distance education",
+        "fully online",
+        "hybrid"
+      ]
+    },
+    "37": {
+      "label": "Required materials",
+      "any": [
+        "required text",
+        "required material",
+        "isbn",
+        "required reading",
+        "textbook:"
+      ],
+      "partial": [
+        "textbook (optional)",
+        "optional text",
+        "recommended text",
+        "textbook"
+      ]
+    },
+    "38": {
+      "label": "Required technology",
+      "any": [
+        "required technology",
+        "technology requirement",
+        "computer requirement",
+        "webcam",
+        "reliable internet",
+        "software"
+      ]
+    },
+    "39": {
+      "label": "Library information",
+      "any": [
+        "library",
+        "lib.ncsu.edu",
+        "hunt library",
+        "dh hill"
+      ]
+    },
+    "40": {
+      "label": "Learning Activities and Assessments",
+      "any": [
+        "assignment",
+        "assessment",
+        "graded",
+        "exam",
+        "quiz",
+        "project"
+      ]
+    },
+    "41": {
+      "label": "Course grading policies",
+      "any": [
+        "late work",
+        "late assignment",
+        "late polic",
+        "late submission",
+        "make-up",
+        "makeup"
+      ],
+      "partial": [
+        "academic integrity",
+        "plagiaris",
+        "extra credit",
+        "grading scale"
+      ]
+    },
+    "42": {
+      "label": "Virtual Class Meetings",
+      "any": [
+        "zoom",
+        "virtual class",
+        "live session",
+        "webex",
+        "class meeting",
+        "synchronous session"
+      ]
+    },
+    "43": {
+      "label": "University Policies",
+      "any": [
+        "accessibility",
+        "disability resource",
+        "dro@ncsu",
+        "non-discrimination",
+        "nondiscrimination",
+        "harassment",
+        "equal opportunity",
+        "accommodation",
+        "dso.dasa",
+        "disability services"
+      ]
+    },
+    "44": {
+      "label": "Moodle Support for Students",
+      "any": [
+        "moodle support",
+        "moodle help",
+        "wolfware",
+        "learning technology"
+      ]
+    }
   }
 }

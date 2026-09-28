@@ -1,6 +1,7 @@
 """Write the three sheet audit workbook."""
 from __future__ import annotations
 
+import os
 from typing import Dict, List
 
 import openpyxl
@@ -87,5 +88,6 @@ def write_workbook(rows: List[Dict], out_path: str) -> str:
     for row in ws.iter_rows(min_row=2, min_col=5, max_col=5):
         row[0].alignment = Alignment(wrap_text=True, vertical='top')
 
+    os.makedirs(os.path.dirname(out_path) or '.', exist_ok=True)
     wb.save(out_path)
     return out_path

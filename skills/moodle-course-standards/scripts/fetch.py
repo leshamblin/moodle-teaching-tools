@@ -67,7 +67,8 @@ def fetch_bundle(base: str, token: str, course_id: int, cache_dir: str,
     """Return everything the rules need for one course, cached to disk.
 
     Keys: course (metadata incl. format and courseimage), contents (sections
-    and modules), forums (forum instances with discussion counts).
+    and modules), forums (forum instances with discussion counts), discussions
+    (forum id to discussion subjects, or None if they could not be fetched).
     """
     os.makedirs(cache_dir, exist_ok=True)
     path = cache_path(cache_dir, course_id)
@@ -87,7 +88,20 @@ def fetch_bundle(base: str, token: str, course_id: int, cache_dir: str,
         # Not fatal. The welcome forum rule reports UNKNOWN when this is empty.
         forums = []
 
-    bundle = {'course': course, 'contents': contents, 'forums': forums}
+    # Discussion subjects, forum id to list, so the welcome rule can tell a
+    # welcome post from a weekly announcement. None means not fetched.
+    discussions = {}  # type: Dict[str, list]
+    for forum in forums:
+        try:
+            got = moodle_call(base, token, 'mod_forum_get_forum_discussions',
+                              forumid=forum['id'], perpage=50)
+        except MoodleError:
+            discussions = None
+            break
+        discussions[str(forum['id'])] = [d.get('name') or '' for d in got.get('discussions', [])]
+
+    bundle = {'course': course, 'contents': contents, 'forums': forums,
+              'discussions': discussions}
     with open(path, 'w') as fh:
         json.dump(bundle, fh)
     return bundle

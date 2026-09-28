@@ -41,12 +41,15 @@ def test_fetch_bundle_refresh_ignores_cache(monkeypatch):
                 return {'courses': [{'id': 8298, 'format': 'weeks'}]}
             if wsfunction == 'core_course_get_contents':
                 return [{'id': 1, 'name': 'Course Administration', 'modules': []}]
-            return {'forums': []}
+            if wsfunction == 'mod_forum_get_forums_by_courses':
+                return [{'id': 5, 'name': 'Announcements'}]
+            return {'discussions': [{'name': 'Welcome to MBA 520'}]}
 
         monkeypatch.setattr(fetch, 'moodle_call', fake)
         got = fetch.fetch_bundle('https://x', 'tok', 8298, d, refresh=True)
         assert got['course']['format'] == 'weeks'
         assert 'core_course_get_contents' in calls
+        assert got['discussions'] == {'5': ['Welcome to MBA 520']}
 
 
 def test_moodle_call_raises_on_moodle_exception(monkeypatch):

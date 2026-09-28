@@ -54,3 +54,24 @@ def test_registry_has_thirty_four_scored_rules():
 
 def test_registry_has_thirty_eight_rows_total():
     assert len(rules.RULES) == 38
+
+
+def test_negated_keyword_does_not_count():
+    """MBA 507: 'There is no required text book' is not a required text."""
+    text = 'Textbook (Optional) There is no required text book for the class.'
+    assert rules.rule_syllabus(text, 'ok', '37').verdict == rules.SOMEWHAT
+
+
+def test_required_textbook_is_yes():
+    text = 'Required Textbook and Ancillaries: Corporate Finance (13th edition)'
+    assert rules.rule_syllabus(text, 'ok', '37').verdict == rules.YES
+
+
+def test_integrity_without_late_policy_is_somewhat():
+    text = 'Academic integrity is expected. Exams are worth 60 percent.'
+    assert rules.rule_syllabus(text, 'ok', '41').verdict == rules.SOMEWHAT
+
+
+def test_disability_services_office_counts_as_accessibility():
+    text = 'Request special accommodations at https://dso.dasa.ncsu.edu/.'
+    assert rules.rule_syllabus(text, 'ok', '43').verdict == rules.YES

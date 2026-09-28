@@ -8,6 +8,7 @@ Three Claude skills for NCSU faculty: an at-risk-student dashboard, a resource-l
 |---|---|---|
 | `moodle-student-risk` | Builds an interactive HTML dashboard of at-risk students in a course | "Check course 9201 for struggling students" |
 | `moodle-link-checkup` | Audits every resource link (PDFs, slide decks, external URLs, Google Docs) and reports a pass or fail per link | "Audit the links in course 9463" |
+| `moodle-course-standards` | Scores every online MBA course in a term against the course review checklist and ranks them worst first | "Audit the Fall 2026 online MBA courses" |
 | `grade-slinger` | Configures a Moodle gradebook to match the syllabus, then produces four instructor deliverables: a Configuration Report PDF, a sample User Report PDF, a bespoke Excel grade calculator, and a Best Practices PDF | "gb" or "set up a gradebook for MIE 412" |
 
 Dashboards and link reports are written to `~/Documents/Programming/Demo/` and open in your browser.

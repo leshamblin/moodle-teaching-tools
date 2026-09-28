@@ -250,10 +250,11 @@ result before it reports any new one.
 
 ## Open questions
 
-1. Fall 2026 exposes only one online MBA section to the search API while Fall
-   2025 exposed 39. Either the term's courses are not built yet or they are
-   hidden and the API skips them. This does not block the Spring 2026 run, but it
-   has to be answered before the tool is pointed at a current term.
+1. ~~Fall 2026 exposes only one online MBA section to the search API.~~
+   **Resolved 2026-09-28:** the courses are there, but from Fall 2026 the MBA
+   courses carry departmental prefixes (MKT 510, ITAO 540, MIE 531), so a name
+   search for "MBA" misses them. The selector now lists category 8 and keeps 500
+   level courses with a 63x section: 34 courses in Fall 2026.
 2. ~~Are courses named or anonymized in what goes out.~~ **Resolved 2026-09-17:
    courses are named.** The Ranking sheet keeps the course shortname and the
    instructor, and no anonymisation layer is needed.

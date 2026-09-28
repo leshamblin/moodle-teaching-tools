@@ -43,3 +43,28 @@ def test_excludes_other_term():
 def test_result_carries_sections():
     got = selector.select_courses(COURSES, 'Spring 2026', r'^6\d\d$')
     assert got[1]['sections'] == ['631', '632']
+
+
+FALL_2026 = [
+    {'id': 11298, 'shortname': 'MKT 510 (631) FALL 2026',
+     'fullname': 'MKT 510 (631) Fall 2026 Marketing Management and Strategy'},
+    {'id': 12521, 'shortname': 'ITAO 540 (631, 632) FALL 2026',
+     'fullname': 'ITAO 540 (631, 632) Fall 2026 Principles of Operations'},
+    {'id': 9068, 'shortname': 'ACC 530 (601) FALL 2026',
+     'fullname': 'ACC 530 (601) Fall 2026 Advanced Income Tax'},
+    {'id': 9077, 'shortname': 'BUS 360 (631) FALL 2026',
+     'fullname': 'BUS 360 (631) Fall 2026 Marketing Methods'},
+    {'id': 9881, 'shortname': 'MIE 531 (301 & 302) FALL 2026',
+     'fullname': 'MIE 531 (301 &amp; 302) Fall 2026 Leading People 1'},
+]
+
+
+def test_number_pattern_keeps_only_graduate_online_sections():
+    got = selector.select_courses(FALL_2026, 'Fall 2026', r'^63\d$', r'^5')
+    assert [c['id'] for c in got] == [11298, 12521]
+
+
+def test_fullname_entities_are_decoded():
+    got = selector.select_courses(FALL_2026, 'Fall 2026', r'^30\d$', r'^5')
+    assert got[0]['fullname'] == 'MIE 531 (301 & 302) Fall 2026 Leading People 1'
+    assert got[0]['sections'] == ['301', '302']
