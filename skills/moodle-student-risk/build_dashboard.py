@@ -98,6 +98,7 @@ def count_missing(items: list, due_by_assign: dict, now_ts: int) -> int:
 # ---------------------------------------------------------------------------
 
 import os
+import glob
 import json
 from urllib.parse import urlencode
 from urllib.request import urlopen, Request
@@ -106,7 +107,14 @@ from urllib.request import urlopen, Request
 def load_token(env_path: str = None):
     """Read MOODLE_PROD_TOKEN and MOODLE_PROD_URL from a .env file. Returns (token, base_url)."""
     if env_path is None:
+        # The MoodleAPI .env when it exists, else the file the plugin's
+        # SessionStart hook writes from the token entered in the plugin settings.
         env_path = os.path.expanduser("~/Documents/Programming/MoodleAPI/.env")
+        if not os.path.exists(env_path):
+            found = sorted(glob.glob(os.path.expanduser(
+                "~/.claude/plugins/data/moodle-teaching-tools*/moodle.env")))
+            if found:
+                env_path = found[0]
     token = base = None
     with open(env_path) as f:
         for line in f:

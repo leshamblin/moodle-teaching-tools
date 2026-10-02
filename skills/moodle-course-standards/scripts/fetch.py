@@ -4,6 +4,7 @@ Read only. Never add a function here that writes to Moodle.
 """
 from __future__ import annotations
 
+import glob
 import json
 import os
 import re
@@ -11,7 +12,18 @@ from typing import Dict, Tuple
 
 import requests
 
-ENV_PATH = os.path.expanduser('~/Documents/Programming/MoodleAPI/.env')
+def _default_env_path() -> str:
+    """The MoodleAPI .env when it exists, else the file the plugin's
+    SessionStart hook writes from the token entered in the plugin settings."""
+    local = os.path.expanduser('~/Documents/Programming/MoodleAPI/.env')
+    if os.path.exists(local):
+        return local
+    found = sorted(glob.glob(os.path.expanduser(
+        '~/.claude/plugins/data/moodle-teaching-tools*/moodle.env')))
+    return found[0] if found else local
+
+
+ENV_PATH = _default_env_path()
 
 
 class MoodleError(RuntimeError):

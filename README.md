@@ -1,6 +1,6 @@
 # Moodle Teaching Tools
 
-Three Claude skills for NCSU faculty: an at-risk-student dashboard, a resource-link audit, and Moodle gradebook setup with instructor deliverables.
+Claude skills for NCSU faculty, with a built-in Moodle connection: an at-risk-student dashboard, a resource-link audit, an online course standards audit, and Moodle gradebook setup with instructor deliverables.
 
 ## The skills
 
@@ -15,37 +15,37 @@ Dashboards and link reports are written to `~/Documents/Programming/Demo/` and o
 Grade Slinger asks where to put course folders the first time you run it and defaults to
 `~/Documents/Claude/Gradebooks/`.
 
-## Prerequisite: the Moodle MCP server
+## Install
 
-`moodle-student-risk` and `moodle-link-checkup` read Moodle through the **Moodle MCP server**, so set
-that up first. **Grade Slinger does not need it:** it works from the syllabus and a gradebook-setup
-PDF you export yourself, and only uses the MCP to spot-check live gradebook state if it happens to be
-connected.
+The plugin includes its own Moodle connection, so there is no separate server to set up.
 
-Installing the server is a separate, one-time step. Follow the [Claude Code Setup Guide](https://github.com/leshamblin/MoodleMCP/blob/main/Claude_Code_Setup_Guide.md) in the [MoodleMCP repo](https://github.com/leshamblin/MoodleMCP). When `claude mcp list` shows `moodle` as Connected, you are ready.
+1. **Get a Moodle web services token.** A Moodle site administrator issues it for your account on the
+   same web service the rest of the team uses. Treat it like a password.
+2. **Install the plugin.** In a terminal:
 
-## Install the plugin
+   ```
+   claude plugin marketplace add leshamblin/moodle-teaching-tools
+   claude plugin install moodle-teaching-tools@moodle-teaching-tools
+   ```
 
-Plugins install from the **Claude Code CLI** (the `claude` command in a terminal). Note: the Claude Code surface inside the Claude Desktop app does not support `/plugin`, so the plugin is currently for CLI users.
+   or, inside a Claude Code session, `/plugin install github:leshamblin/moodle-teaching-tools`.
+3. **Enter your Moodle details** when Claude asks: the site address (pre-filled for this academic year)
+   and your token. The token is stored in the Mac keychain, not in a settings file. To change either
+   later, run `/plugin`, pick Moodle Teaching Tools, and choose Configure.
+4. **Restart Claude**, then ask "What Moodle courses can I see?" to check the connection.
 
-```
-claude plugin marketplace add leshamblin/moodle-teaching-tools
-claude plugin install moodle-teaching-tools@moodle-teaching-tools
-```
+The first start downloads the server and, if needed, [uv](https://docs.astral.sh/uv/), which runs it.
+That takes a minute; later starts are quick.
 
-Inside an interactive `claude` session you can also run:
+Claude is **read-only** on Moodle unless you turn on "Allow changes to Moodle" in the plugin settings.
 
-```
-/plugin install github:leshamblin/moodle-teaching-tools
-```
-
-If you installed from a running session, run `/reload-plugins` or restart Claude Code.
+If you already run the Moodle MCP server yourself with `~/Documents/Programming/MoodleAPI/.env`, the
+skills keep using that file. Leave the token blank and the plugin's own connection stays off.
 
 ## Requirements
 
-- Claude Code CLI
-- For `moodle-student-risk` and `moodle-link-checkup`: the Moodle MCP server installed and connected
-  (see Prerequisite above), and an NCSU Moodle account with a Web Services token
+- Claude Code
+- For the Moodle skills: a Moodle web services token (see Install above)
 - For `grade-slinger`: Google Chrome or Chromium (HTML-to-PDF), and `python3` with `openpyxl`.
   `PyPDF2` is optional and only trims trailing blank pages from generated PDFs.
 

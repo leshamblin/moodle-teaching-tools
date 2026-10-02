@@ -7,6 +7,8 @@ description: Use when asked to identify struggling, behind, or at-risk students 
 
 Produces a self-contained interactive HTML dashboard identifying at-risk students in a Moodle course, intended for a non-technical professor.
 
+The Moodle tools are named `mcp__moodle__<tool>` when the Moodle MCP server is set up on its own, and `mcp__plugin_moodle-teaching-tools_moodle__<tool>` when it comes from this plugin. Use whichever is connected.
+
 ## When to Use
 
 - "Check course 9201 for struggling students"
@@ -74,7 +76,7 @@ For `enrolled_users.json`, additionally extract just the `users` array:
 echo "$RESPONSE" | jq -r '.result | fromjson | .users' > /tmp/moodle-risk-<course_id>/enrolled_users.json
 ```
 
-**Faster alternative — direct curl:** If MCP responses are exceeding token limits, hit the REST API directly. The token is in `~/Documents/Programming/MoodleAPI/.env` as `MOODLE_PROD_TOKEN`/`MOODLE_PROD_URL`. See the smoke-test commands in `docs/superpowers/plans/2026-05-30-moodle-student-risk.md` Task 7 Step 4 for the exact curl invocations.
+**Faster alternative, direct curl:** If MCP responses are exceeding token limits, hit the REST API directly. The token is in `~/Documents/Programming/MoodleAPI/.env`, or, when that file does not exist, the `moodle.env` the plugin writes from its settings into `~/.claude/plugins/data/moodle-teaching-tools*/`, as `MOODLE_PROD_TOKEN`/`MOODLE_PROD_URL`. See the smoke-test commands in `docs/superpowers/plans/2026-05-30-moodle-student-risk.md` Task 7 Step 4 for the exact curl invocations.
 
 ### 3. Run the renderer
 
@@ -92,7 +94,7 @@ python3 ~/.claude/skills/moodle-student-risk/build_dashboard.py --course-id <id1
 
 The script:
 1. Reads the staged JSON files.
-2. Reads `MOODLE_PROD_TOKEN` + `MOODLE_PROD_URL` from `~/Documents/Programming/MoodleAPI/.env`.
+2. Reads `MOODLE_PROD_TOKEN` + `MOODLE_PROD_URL` from `~/Documents/Programming/MoodleAPI/.env`, or, when that file does not exist, the `moodle.env` the plugin writes from its settings into `~/.claude/plugins/data/moodle-teaching-tools*/`.
 3. Hits Moodle REST in parallel (8 workers) for per-student grade + completion data.
 4. Computes risk per the model above.
 5. Writes the HTML and opens Chrome (if `--open`).

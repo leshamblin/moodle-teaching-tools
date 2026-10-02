@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "moodle": {
+      "command": "${CLAUDE_PLUGIN_ROOT}/scripts/start-moodle-mcp.sh",
+      "args": [],
+      "env": {
+        "MTT_MOODLE_URL": "${user_config.moodle_url}",
+        "MTT_MOODLE_TOKEN": "${user_config.moodle_token}",
+        "MTT_ALLOW_WRITES": "${user_config.allow_writes}"
+      }
+    }
+  }
+}

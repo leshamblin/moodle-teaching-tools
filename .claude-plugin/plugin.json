@@ -1,10 +1,32 @@
 {
   "name": "moodle-teaching-tools",
-  "version": "0.6.0",
-  "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables.",
+  "version": "0.7.0",
+  "description": "Claude skills and a built-in Moodle connection for NCSU faculty: at-risk-student dashboards, resource-link audits, online course standards audits, and Moodle gradebook setup.",
   "author": {
     "name": "Les Shamblin"
   },
   "homepage": "https://github.com/leshamblin/moodle-teaching-tools",
-  "license": "MIT"
+  "license": "MIT",
+  "userConfig": {
+    "moodle_url": {
+      "type": "string",
+      "title": "Moodle site address",
+      "description": "The address in your browser when you are signed in to Moodle, up to .edu. It changes each academic year.",
+      "default": "https://moodle-courses2527.wolfware.ncsu.edu",
+      "required": true
+    },
+    "moodle_token": {
+      "type": "string",
+      "title": "Moodle web services token",
+      "description": "Your own token. Treat it like a password. Leave blank only if you already run the Moodle MCP server separately.",
+      "sensitive": true,
+      "required": false
+    },
+    "allow_writes": {
+      "type": "boolean",
+      "title": "Allow changes to Moodle",
+      "description": "Leave off to keep Claude read-only on live courses.",
+      "default": false
+    }
+  }
 }

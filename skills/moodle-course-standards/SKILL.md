@@ -24,7 +24,7 @@ folder next to the workbook.
 
 ## Prerequisites
 
-- `MOODLE_PROD_URL` and `MOODLE_PROD_TOKEN` in `~/Documents/Programming/MoodleAPI/.env`
+- `MOODLE_PROD_URL` and `MOODLE_PROD_TOKEN` in `~/Documents/Programming/MoodleAPI/.env`, or, when that file does not exist, the `moodle.env` the plugin writes from its settings into `~/.claude/plugins/data/moodle-teaching-tools*/`
 - python3 with openpyxl, pdfplumber, python-docx, python-pptx, requests
 - `curl` on the path
 

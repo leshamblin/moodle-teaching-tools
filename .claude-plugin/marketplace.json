@@ -1,6 +1,6 @@
 {
   "name": "moodle-teaching-tools",
-  "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables.",
+  "description": "Claude skills and a built-in Moodle connection for NCSU faculty: at-risk-student dashboards, resource-link audits, online course standards audits, and Moodle gradebook setup.",
   "owner": {
     "name": "Les Shamblin"
   },
@@ -8,7 +8,7 @@
     {
       "name": "moodle-teaching-tools",
       "source": "./",
-      "description": "Three Claude skills for NCSU faculty: at-risk-student dashboards, resource-link audits, and Moodle gradebook setup with instructor deliverables."
+      "description": "Claude skills and a built-in Moodle connection for NCSU faculty: at-risk-student dashboards, resource-link audits, online course standards audits, and Moodle gradebook setup."
     }
   ]
 }

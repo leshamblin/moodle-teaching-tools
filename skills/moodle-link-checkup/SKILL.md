@@ -7,6 +7,8 @@ description: Use when asked to audit, check, list, or verify resource links (PDF
 
 Builds a Google-Docs-friendly HTML report of every resource link in a Moodle course, with each link automatically marked ✓ working or ✗ broken.
 
+The Moodle tools are named `mcp__moodle__<tool>` when the Moodle MCP server is set up on its own, and `mcp__plugin_moodle-teaching-tools_moodle__<tool>` when it comes from this plugin. Use whichever is connected.
+
 ## When to Use
 
 - "Check the links in course 9463"
