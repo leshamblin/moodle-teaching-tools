@@ -1,7 +1,7 @@
 """CLI for the MBA online course standards audit.
 
 Read only. Run:
-    python3 audit.py --term "Fall 2026" --out ~/Desktop/MBA-standards-Fall-2026.xlsx
+    python3 audit.py --term "Fall 2026" --out ~/Documents/Programming/MBA-Course-Review-Pilot/fall-2026-results/MBA-standards-Fall-2026.xlsx
 
 Spring 2026 was selected by searching for "MBA" in course names. From Fall 2026
 the MBA courses carry departmental prefixes (MKT 510, ITAO 540), so the default
@@ -25,7 +25,7 @@ import report
 import rules
 import selector
 
-DEFAULT_CACHE = os.path.expanduser('~/Documents/Programming/Demo/course-standards-cache')
+DEFAULT_CACHE = os.path.expanduser('~/Documents/Programming/MBA-Course-Review-Pilot/cache')
 
 
 def collect_links(bundle: Dict) -> List[str]:
@@ -66,7 +66,7 @@ def main(argv=None) -> int:
     ap.add_argument('--refresh', action='store_true', help='ignore the cache and refetch')
     ap.add_argument('--skip-links', action='store_true', help='skip HTTP link checking')
     ap.add_argument('--forms', action='store_true', help='also write a filled checklist per course')
-    ap.add_argument('--out', default=os.path.expanduser('~/Desktop/MBA-standards.xlsx'))
+    ap.add_argument('--out', default=os.path.expanduser('~/Documents/Programming/MBA-Course-Review-Pilot/MBA-standards.xlsx'))
     args = ap.parse_args(argv)
 
     base, token = fetch.load_token()
