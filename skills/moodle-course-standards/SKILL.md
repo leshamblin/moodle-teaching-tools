@@ -31,7 +31,7 @@ folder next to the workbook.
 ## Steps
 
     cd skills/moodle-course-standards/scripts
-    python3 audit.py --term "Fall 2026" --forms --out ~/Desktop/MBA-standards-Fall-2026.xlsx
+    python3 audit.py --term "Fall 2026" --forms --out ~/Documents/Programming/MBA-Course-Review-Pilot/fall-2026-results/MBA-standards-Fall-2026.xlsx
 
 About three minutes for 34 courses. `--skip-links` skips HTTP link checks,
 `--refresh` ignores the cache, `--course-ids 11298,12521` runs named courses only.
@@ -78,6 +78,6 @@ must change with it.
 It compares the tool with an instructional designer's hand reviews of two Spring
 2026 courses, on whether each row fails. The reviews, the course snapshots and
 `disputed.json` (rows where the tool deliberately disagrees, with reasons) live in
-`~/Documents/Programming/Demo/course-standards-golden`, never in this repo: this
+`~/Documents/Programming/MBA-Course-Review-Pilot/golden`, never in this repo: this
 repo is public, and they are named reviews of colleagues' courses with student
 names in the forum data. Without that folder the test skips.

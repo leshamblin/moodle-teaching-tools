@@ -7,7 +7,7 @@ it.
 The hand reviews are named reviews of colleagues' courses, and the course
 snapshots carry student names in forum subjects, so none of it lives in this
 public repo. It sits in a private folder, by default
-~/Documents/Programming/Demo/course-standards-golden, or $COURSE_STANDARDS_GOLDEN:
+~/Documents/Programming/MBA-Course-Review-Pilot/golden, or $COURSE_STANDARDS_GOLDEN:
 
     <id>-*.xlsx         the filled review checklist, verdicts in column B
     <id>-bundle.json    the course snapshot the review was made against
@@ -32,7 +32,7 @@ import rules
 
 
 GOLDEN_DIR = os.environ.get('COURSE_STANDARDS_GOLDEN',
-                            os.path.expanduser('~/Documents/Programming/Demo/course-standards-golden'))
+                            os.path.expanduser('~/Documents/Programming/MBA-Course-Review-Pilot/golden'))
 REVIEWS = sorted(glob.glob(os.path.join(GOLDEN_DIR, '[0-9]*-*.xlsx')))
 REVIEW_IDS = [os.path.basename(p).split('-')[0] for p in REVIEWS]
 
